@@ -33,6 +33,14 @@
       <div class="col-xs-6">
       <%= f.text_field :surname_2, class:"form-control", placeholder:"Segundo apellido" %>
       </div>
+    </div><br/>
+    <div class="row">
+      <div class="col-xs-6">
+        <%= f.text_field :birthday, class:"form-control", 'data-behaviour' => 'datepicker', placeholder:"Fecha nacimiento" %>
+      </div>
+      <div class="col-xs-6">
+        <%= f.country_select(:country, ["Spain"], {}, {class: "select"})%>
+      </div>  
     </div>
   </section>
   <% end %>
@@ -46,5 +54,12 @@
     bodyTag: 'section',
     transitionEffect: 'slideLeft',
     autoFocus: true
+  });
+
+  $('[data-behaviour~=datepicker]').datepicker({
+    format: 'dd/mm/yyyy',
+    startDate: '01/01/1920',
+    language: 'es',
+    startView: 2
   });
 </script>

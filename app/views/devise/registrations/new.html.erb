@@ -1,9 +1,14 @@
+<head>
+<script src="jquery.steps.js"></script>
+</head>
+
 <div id="log_in_form">
-  <h3>Registro de administrador</h3>
+  <h2>Registro de administrador</h2>
 
-  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html:{id:"wizard"}) do |f| %>
     <%= devise_error_messages! %>
-
+  <h3>Cuenta</h3>
+  <section>
     <div class="form-group">
       <%= f.email_field :email, class:"form-control", autofocus: true, placeholder:"Email" %>
     </div>
@@ -15,11 +20,31 @@
     <div class="form-group">
       <%= f.password_field :password_confirmation, class:"form-control", autocomplete: "off", placeholder:"Confirmar contraseña" %>
     </div>
-
-    <div class="text-center">
-      <%= f.submit "Siguiente", class:"btn btn-primary" %>
+  </section>
+  <h3>Información personal</h3>
+  <section>
+    <div class="form-group">
+      <%= f.text_field :name, class:"form-control", placeholder:"Nombre" %>
     </div>
+    <div class="row">
+      <div class="col-xs-6">
+      <%= f.text_field :surname_1, class:"form-control", placeholder:"Primer apellido" %>
+      </div>
+      <div class="col-xs-6">
+      <%= f.text_field :surname_2, class:"form-control", placeholder:"Segundo apellido" %>
+      </div>
+    </div>
+  </section>
   <% end %>
-
-  <%= render "devise/shared/links" %>
+    <%= render "devise/shared/links" %>
 </div>
+
+<script>
+  var form = $('#wizard');
+  form.steps({
+    headerTag: 'h3',
+    bodyTag: 'section',
+    transitionEffect: 'slideLeft',
+    autoFocus: true
+  });
+</script>

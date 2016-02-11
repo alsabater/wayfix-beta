@@ -2,16 +2,14 @@
 <html>
 <head>
   <title>Wayfix</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
-  <script src="jquery.steps.js"></script>
 </head>
 <body>
 <div class="header">
 	<img id="logo" src= <%= asset_path("wayfix.png") %> >
 </div>
 <%= yield %>
-
 </body>
 </html>

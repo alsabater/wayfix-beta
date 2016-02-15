@@ -7,18 +7,15 @@
 <% end %><br/>
 
 <div id="log_in_form">
-  <h3>Registro de la sociedad</h3>
-  <%= form_for(@client, html:{id:"wizard"}) do |f| %>
-  <h5>Empresa</h5>
+  <h3>Registro de Clínica</h3>
+  <%= form_for(@center, html:{id:"wizard"}) do |f| %>
+  <h5>Clínica</h5>
   <section>
     <div class="form-group">
-	  <%= f.text_field :clinic_name, class:"form-control", placeholder:"Nombre sociedad" %>
-    </div>
-    <div class="form-group">
-	  <%= f.text_field :nif, class:"form-control", placeholder:"NIF" %>
+	  <%= f.text_field :center_name, class:"form-control", placeholder:"Nombre clínica" %>
     </div>
   </section>
-  <h5>Domicilo fiscal</h5>
+  <h5>Ubicación</h5>
   <section>
     <div class="form-group">
   	  <div class="form-group">

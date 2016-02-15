@@ -17,7 +17,7 @@ before_action :must_be_admin
       current_user.client_id = @client.id
       current_user.save
       @client.user_id = current_user.id
-      redirect_to root_path
+      redirect_to new_center_path
     else
       flash[:alert] = "No se ha podido registrar la empresa. Póngase en contacto con Wayfix"
     end

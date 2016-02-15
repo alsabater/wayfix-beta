@@ -1,0 +1,77 @@
+<head>
+<script src="jquery.steps.js"></script>
+</head>
+
+<% flash.each do |key, value| %>
+  <div class="new_client alert-success"><%= value %></div>
+<% end %><br/>
+
+<div id="log_in_form">
+  <h3>Registro de la sociedad</h3>
+  <%= form_for(@client, html:{id:"wizard"}) do |f| %>
+  <h5>Empresa</h5>
+  <section>
+    <div class="form-group">
+	  <%= f.text_field :clinic_name, class:"form-control", placeholder:"Nombre sociedad" %>
+    </div>
+    <div class="form-group">
+	  <%= f.text_field :nif, class:"form-control", placeholder:"NIF" %>
+    </div>
+  </section>
+  <h5>Domicilo fiscal</h5>
+  <section>
+    <div class="form-group">
+  	  <div class="form-group">
+	    <%= f.text_field :address, class:"form-control", placeholder:"Dirección" %>
+	  </div>
+	  <div class="row">
+	    <div class="col-xs-6">
+	      <%= f.text_field :city, class:"form-control", placeholder:"Ciudad" %>
+	    </div>
+	    <div class="col-xs-6">
+	      <%= f.text_field :province, class:"form-control", placeholder:"Provincia" %>
+	    </div>
+	  </div><br/>
+	  <div class="row">
+	    <div class="col-xs-6">
+	      <%= f.text_field :zip_code, class:"form-control", placeholder:"Código postal" %>
+	    </div>
+	    <div class="col-xs-6">
+	      <%= f.country_select(:country, ["Spain"], {}, {class: "form-control"})%>
+	    </div>
+	  </div>
+    </div>
+  </section>
+  <h5>Datos de contacto</h5>
+  <section>
+  <div class="form-group">
+    <div class="form-group">
+	  <%= f.text_field :email, class:"form-control", placeholder:"E-mail" %>
+	</div>
+    <div class="form-group">
+	  <%= f.text_field :phone_number_1, class:"form-control", placeholder:"Teléfono" %>
+	</div>
+    <div class="form-group">
+	  <%= f.text_field :phone_number_2, class:"form-control", placeholder:"Teléfono alternativo" %>
+	</div>
+	<div class="form-group">
+	  <%= f.text_field :fax_number, class:"form-control", placeholder:"Fax" %>
+	</div>
+  </div>
+  </section>
+  <% end %>
+</div>
+
+<script>
+  var form = $('#wizard');
+  form.steps({
+    headerTag: 'h5',
+    bodyTag: 'section',
+    transitionEffect: 'slideLeft',
+    autoFocus: true,
+    onFinished: function (event, currentIndex)
+      {
+        form.submit();
+      }
+  });
+</script>

@@ -41,7 +41,7 @@ class DeviseCreateUsers < ActiveRecord::Migration
       t.string :phone_number_1
       t.string :phone_number_2
       t.string :job_position
-      t.string :is_admin?, default: "false"
+      t.boolean :is_admin?, default: true 
 
       t.timestamps null: false
     end

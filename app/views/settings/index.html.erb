@@ -1,0 +1,10 @@
+<div>
+  <% if current_user.is_admin? %>
+    <h3>Panel de administración de <%= @client.clinic_name %></h3>
+    <%= link_to "Crear clínica", new_center_path %>
+    <br/>
+    <% @center.each do |f| %>
+    <h4>Clínica <%= f.center_name %></h4>
+    <% end %>
+  <% end %>
+</div>

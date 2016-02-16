@@ -5,10 +5,38 @@
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
+  <script src="jquery.steps.js"></script>
 </head>
 <body>
 <div class="header">
 	<img id="logo" src= <%= asset_path("wayfix.png") %> >
+</div>
+
+<div class="col-xs-1">
+  <div id="navbar">
+  	<ul class="list-unstyled">
+      <li>
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+  	  </li>
+  	  <li>
+        <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
+  	  </li>
+  	  <li>
+        <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+  	  </li>
+  	  <li>
+        <span class="glyphicon glyphicon-usd" aria-hidden="true"></span>
+  	  </li>
+  	  <li>
+        <span class="glyphicon glyphicon-stats" aria-hidden="true"></span>
+  	  </li>
+      <li>
+        <%= link_to settings_path do  %>
+          <span class="glyphicon glyphicon-wrench" aria-hidden="true"></span>
+        <% end %>
+      </li>
+  	</ul>
+  </div>
 </div>
 <%= yield %>
 </body>

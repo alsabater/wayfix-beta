@@ -26,11 +26,12 @@ class Users::InvitationsController < Devise::InvitationsController
   def create
     self.resource = invite_resource
     resource_invited = resource.errors.empty?
-    # ADDING USER INFO FROM THE CURRENT USER (ALVARO)
+
+    # ADDING USER INFO FROM THE CURRENT USER ------
     self.resource.update_attributes(is_admin?: false, 
       client_id: current_user.client_id, 
       job_position: params[:user][:job_position])
-
+    # -------
     yield resource if block_given?
 
     if resource_invited

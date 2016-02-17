@@ -84,6 +84,7 @@ ActiveRecord::Schema.define(version: 20160216115315) do
     t.string   "phone_number_2"
     t.string   "job_position"
     t.boolean  "is_admin?",              default: true
+    t.string   "secret_key"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
     t.string   "invitation_token"

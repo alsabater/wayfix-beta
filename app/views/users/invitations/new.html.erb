@@ -6,7 +6,8 @@
 
 <% resource.class.invite_key_fields.each do |field| -%>
   <%= f.text_field field, class:"form-control", placeholder:"Email" %></p>
-	<%= f.select(:job_position, ['Tipo de usuario','Personal de administración y servicios','Personal Médico','Personal sanitario no médico'], {}, {:class => "form-control"}) %></p>
+  <%= f.select(:job_position, ['Tipo de usuario','Personal de administración y servicios','Personal Médico','Personal sanitario no médico'], {}, {:class => "form-control"}) %></p>
+  <%= f.text_field :secret_key, class:"form-control", placeholder:"Llave de acceso" %>
 <% end -%>
 
   <p><%= f.submit t("devise.invitations.new.submit_button"), class:"btn btn-success" %></p>

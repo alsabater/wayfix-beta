@@ -1,0 +1,31 @@
+es:
+  devise:
+    failure:
+      invited: "Tienes una invitación pendiente, acéptala para terminar de crear tu cuenta."
+    invitations:
+      send_instructions: "Una invitación se ha enviado al siguiente correo: %{email}."
+      invitation_token_invalid: "El token de la invitación es inválido!"
+      updated: "Tu contraseña se ha establecido satisfactoriamente. Bienvenido a Wayfix."
+      updated_not_active: "Tu contraseña se ha establecido satisfactoriamente."
+      no_invitations_remaining: "No hay invitaciones pendientes."
+      invitation_removed: "Tu invitación ha sido eliminada."
+      new:
+        header: "Envío de invitación"
+        submit_button: "Invitar"
+      edit:
+        header: "Establece tu contraseña"
+        submit_button: "Establecer"
+    mailer:
+      invitation_instructions:
+        subject: "Instrucciones invitación Wayfix"
+        hello: "Hola %{email}"
+        someone_invited_you: "Alguien te ha invitado a unirte a %{url}, puedes aceptar la invitación a través del siguiente link: "
+        accept: "Unirme"
+        accept_until: "La invitación caducará el día %{due_date}."
+        ignore: "Si no quieres aceptar la invitación, por favor ignora este mail.<br />Tu cuenta no será creada hasta que accedas al link y establezcas una contraseña."
+  time:
+    formats:
+      devise:
+        mailer:
+          invitation_instructions:
+            accept_until_format: "%B %d, %Y %I:%M %p"

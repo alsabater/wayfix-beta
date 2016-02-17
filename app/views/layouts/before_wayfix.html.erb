@@ -11,6 +11,10 @@
 <div class="header">
 	<img id="logo" src= <%= asset_path("wayfix.png") %> >
 </div>
+<% flash.each do |key, value| %>
+  <div class="flash_message alert-success"><%= value %></div>
+<% end %><br/>
+
 <%= yield %>
 </body>
 </html>

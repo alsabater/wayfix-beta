@@ -1,7 +1,9 @@
 class CentersController < ApplicationController
+  before_action :authenticate_user!
+  before_action :must_be_admin
   layout "before_wayfix"
   def new
-  	flash[:success] = "Añade ahora una clínica perteneciente a la sociedad registrada. Más adelante podrás añadir personal a la clínica o crear más clínicas."
+  	flash.now[:success] = "Añade ahora una clínica perteneciente a la sociedad registrada. Más adelante podrás añadir personal a la clínica o crear más clínicas."
   	@center = Center.new
   end
 
@@ -11,7 +13,7 @@ class CentersController < ApplicationController
     if @center.save
   	  redirect_to settings_path
   	else
-      flash[:alert] = "No se ha podido crear la clínica. Póngase en contacto con Wayfix"
+      flash.now[:alert] = "No se ha podido crear la clínica. Póngase en contacto con Wayfix"
     end
   end
 

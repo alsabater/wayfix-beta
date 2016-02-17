@@ -1,7 +1,3 @@
-<% flash.each do |key, value| %>
-  <div class="flash_message alert-success"><%= value %></div>
-<% end %><br/>
-
 <div id="log_in_form">
   <h3>Registro de Clínica</h3>
   <%= form_for(@center, html:{id:"wizard"}) do |f| %>

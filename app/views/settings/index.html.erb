@@ -5,6 +5,7 @@
     <br/>
     <% @center.each do |f| %>
     <h4>Clínica <%= f.center_name %></h4>
+	  <%= link_to "Invitar a personal", new_user_invitation_path %>	  
     <% end %>
   <% end %>
 </div>

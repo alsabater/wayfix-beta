@@ -10,13 +10,16 @@
 <body>
 <div class="header">
 	<img id="logo" src= <%= asset_path("wayfix.png") %> >
+  <span style="float: right"><%= link_to "Cerrar sesión", destroy_user_session_path, method: :delete %></span>
 </div>
 
 <div class="col-xs-1">
   <div id="navbar">
   	<ul class="list-unstyled">
       <li>
-        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+        <%= link_to root_path do %>
+          <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+        <% end %>
   	  </li>
   	  <li>
         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
@@ -38,6 +41,9 @@
   	</ul>
   </div>
 </div>
+<% flash.each do |key, value| %>
+  <div class="flash_message alert-success"><%= value %></div>
+<% end %><br/>
 <%= yield %>
 </body>
 </html>

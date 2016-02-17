@@ -12,9 +12,6 @@ class HomeController < ApplicationController
   def index
   	@user = current_user
   	if @user.created_by_invite?
-  	  @user.update_attributes(is_admin?: false)
-  	  @user.client_id = Client.where(user_id: @user.invited_by_id).first.id
-  	  @user.save
       redirect_to settings_path
     else 
       redirection_options

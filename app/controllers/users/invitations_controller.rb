@@ -19,6 +19,7 @@ class Users::InvitationsController < Devise::InvitationsController
   # GET /resource/invitation/new
   def new
     self.resource = resource_class.new
+    @centers = Center.where(current_user.id)
     render :new
   end
 
@@ -30,7 +31,10 @@ class Users::InvitationsController < Devise::InvitationsController
     # ADDING USER INFO FROM THE CURRENT USER ------
     self.resource.update_attributes(is_admin?: false, 
       client_id: current_user.client_id, 
-      job_position: params[:user][:job_position])
+      job_position: params[:user][:job_position],
+      name: params[:user][:name],
+      surname_1: params[:user][:surname_1])
+    invite_resource.centers << Center.where(id: params[:centers])
     # -------
     yield resource if block_given?
 

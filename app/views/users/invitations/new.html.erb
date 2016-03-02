@@ -5,9 +5,15 @@
   <%= devise_error_messages! %>
 
 <% resource.class.invite_key_fields.each do |field| -%>
-  <%= f.text_field field, class:"form-control", placeholder:"Email" %></p>
-  <%= f.select(:job_position, ['Tipo de usuario','Personal de administración y servicios','Personal Médico','Personal sanitario no médico'], {}, {:class => "form-control"}) %></p>
-  <%= f.text_field :secret_key, class:"form-control", placeholder:"Llave de acceso" %>
+    <%= f.text_field field, class:"form-control", placeholder:"Email" %></p>
+    <%= f.text_field :name, class:"form-control", placeholder:"Nombre" %></p>
+    <%= f.text_field :surname_1, class:"form-control", placeholder:"Primer apellido" %></p>
+    <%= f.select(:job_position, ['Tipo de usuario','Personal de administración y servicios','Personal Médico','Personal sanitario no médico'], {}, {:class => "form-control"}) %></p>
+    <h4 style="text-align: left">Clínicas a las que pertenece</h4>
+    <% @centers.each do |t| %>
+    	<%= f.label t.center_name %>
+    	<%= check_box_tag "centers[]", t.id %>
+    <% end %></p>
 <% end -%>
 
   <p><%= f.submit t("devise.invitations.new.submit_button"), class:"btn btn-success" %></p>

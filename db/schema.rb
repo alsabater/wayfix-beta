@@ -11,14 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160216115315) do
-
-  create_table "center_users", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "center_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
+ActiveRecord::Schema.define(version: 20160301203049) do
 
   create_table "centers", force: :cascade do |t|
     t.integer  "client_id"
@@ -37,6 +30,14 @@ ActiveRecord::Schema.define(version: 20160216115315) do
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
   end
+
+  create_table "centers_users", id: false, force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "center_id"
+  end
+
+  add_index "centers_users", ["center_id"], name: "index_centers_users_on_center_id"
+  add_index "centers_users", ["user_id"], name: "index_centers_users_on_user_id"
 
   create_table "clients", force: :cascade do |t|
     t.integer  "user_id"
@@ -84,7 +85,6 @@ ActiveRecord::Schema.define(version: 20160216115315) do
     t.string   "phone_number_2"
     t.string   "job_position"
     t.boolean  "is_admin?",              default: true
-    t.string   "secret_key"
     t.datetime "created_at",                            null: false
     t.datetime "updated_at",                            null: false
     t.string   "invitation_token"

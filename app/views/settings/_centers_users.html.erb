@@ -1,0 +1,22 @@
+</p>
+<%= link_to "Crear clínica", new_center_path %>
+<% @center.each do |f| %>
+	<h4>Clínica <%= f.center_name %></h4>
+	<% if f.users[0] != nil %>
+		<table class="table table-striped">
+			<tbody>
+				<% f.users.each do |user| %>
+				<tr>
+					<td><%= user.name %></td>
+					<td><%= user.surname_1 %></td>
+					<td><%= user.email %></td>
+					<td><%= user.job_position %></td>
+					<td><%= link_to "Eliminar de " + f.center_name %>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
+	<% else %>
+		<p>Ahora puedes añadir personal a la Clínica <%=f.center_name %></p>
+	<% end %>
+<% end %>	  

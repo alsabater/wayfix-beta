@@ -2,10 +2,12 @@ Rails.application.routes.draw do
   
   root "home#index"
 
-  devise_for :users, controllers: { invitations: 'users/invitations' }
+  devise_for :users, controllers: { invitations: 'users/invitations', registrations: 'users/registrations' }
   resources :clients
   resources :centers
 
+  delete '/centers_users', to: 'centers_users#destroy', as: :destroy_center_user
+  
   get '/dashboard', to: 'dashboard#index'
   get '/settings', to: 'settings#index'
   # The priority is based upon order of creation: first created -> highest priority.

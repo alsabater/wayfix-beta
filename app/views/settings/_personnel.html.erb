@@ -2,13 +2,14 @@
 <%= link_to "Invitar a personal", new_user_invitation_path %></p>
 <% @users.each do |f| %>
 	<% if f != nil %>
-		<table class="table table-striped">
+		<table class="table">
 			<tbody>
 				<tr>
 					<td><%= f.name %></td>
 					<td><%= f.surname_1 %></td>
 					<td><%= f.email %></td>
 					<td><%= f.job_position %></td>
+					<td><%= link_to "Eliminar", user_registration_path(user_id: f.id), method: :delete, data: {confirm: "¿Estás seguro que quieres eliminar a " + f.name + " " + f.surname_1 + "?"} %>
 				</tr>
 			</tbody>
 		</table>

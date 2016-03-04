@@ -19,7 +19,8 @@ class Users::InvitationsController < Devise::InvitationsController
   # GET /resource/invitation/new
   def new
     self.resource = resource_class.new
-    @centers = Center.where(current_user.id)
+    @client = Client.find_by(user_id: current_user.id)
+    @centers = Center.where(client_id: @client.id)
     render :new
   end
 
@@ -28,7 +29,7 @@ class Users::InvitationsController < Devise::InvitationsController
     self.resource = invite_resource
     resource_invited = resource.errors.empty?
 
-    # ADDING USER INFO FROM THE CURRENT USER ------
+    # ADDING USER INFO FROM THE CURRENT USER ------e
     self.resource.update_attributes(is_admin?: false, 
       client_id: current_user.client_id, 
       job_position: params[:user][:job_position],

@@ -35,7 +35,7 @@ class Users::InvitationsController < Devise::InvitationsController
       job_position: params[:user][:job_position],
       name: params[:user][:name],
       surname_1: params[:user][:surname_1])
-    invite_resource.centers << Center.where(params[:centers])
+    invite_resource.centers << Center.where(id: params[:centers])
     # -------
     yield resource if block_given?
 

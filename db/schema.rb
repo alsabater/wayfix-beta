@@ -11,7 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160301203049) do
+ActiveRecord::Schema.define(version: 20160618175754) do
+
+  create_table "calendars", force: :cascade do |t|
+    t.datetime "start_date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "centers", force: :cascade do |t|
     t.integer  "client_id"
@@ -56,6 +62,15 @@ ActiveRecord::Schema.define(version: 20160301203049) do
     t.string   "currency"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "start_time"
+    t.datetime "finish_time"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "users", force: :cascade do |t|

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   delete '/centers_users', to: 'centers_users#destroy', as: :destroy_center_user
   
+  get '/calendar', to: 'events#index'
   get '/dashboard', to: 'dashboard#index'
   get '/settings', to: 'settings#index'
   # The priority is based upon order of creation: first created -> highest priority.

@@ -1,0 +1,17 @@
+<ul class="list-inline">
+  <li class="m"><%= link_to " << ", date: @date.prev_year %></li>
+  <li class="m"><%= link_to " < ", date: @date.prev_month %></li>
+  <%= @date.strftime("%B %Y") %>
+  <li class="m"><%= link_to " > ", date: @date.next_month %></li>
+  <li class="m"><%= link_to " >> ", date: @date.next_year %></li>
+  <li style="float: right"><%= link_to "Ver Día", events_day_path %></li>
+  <li style="float: right"><%= link_to "+ Nuevo Evento", new_event_path, remote: true, class: "btn btn-primary" %></li>
+</ul>
+</br>
+<div id="events">
+  <div id="calendar">
+    <%= monthCalendar @date do |date| %>
+    <a href="/events/day?date=<%= date %>"><%= date.day %></a>
+    <% end %>
+  </div>
+</div>

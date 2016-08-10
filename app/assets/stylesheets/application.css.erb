@@ -12,15 +12,32 @@
  *
  *= require_tree .
  *= require_self
+ *= require bootstrap
  *= require bootstrap-datepicker
 
  */
 
+@font-face {
+    font-family: 'Glyphicons Halflings';
+    src: url('/assets/glyphicons-halflings-regular.eot');
+    src: url('/assets/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/assets/glyphicons-halflings-regular.woff') format('woff'), url('/assets/glyphicons-halflings-regular.ttf') format('truetype'), url('/assets/glyphicons-halflings-regular.svg#glyphicons-halflingsregular') format('svg');
+}
+
 .header {
+	float: left;
 	width: 100%;
-	height: 40px;
+	height: 60px;
 	padding: 10px;
 	margin: 0;
+	border-bottom-style: solid;
+	background-color: #62A0F1;
+	border-width: 3px;
+	border-color: #62A0F1;
+}
+
+.header a {
+	float: right;
+	color: white;
 }
 
 .header_before_wayfix {
@@ -30,8 +47,7 @@
 }
 
 #logo {
-	float: left;
-	width: 40px;
+	width: 130px;
 }
 
 #logo_before_wayfix {
@@ -39,28 +55,31 @@
 }
 
 #navbar {
-	width: 100px;
+	width: 60px;
+	margin-top: 70px;
 	margin-left: 0;
 	float: left;
 	padding: 0;
+	background-color: #62A0F1;
+	border-radius: 0 5px 5px 0;
 }
 #navbar li {
-	margin-left: 20px;
-	padding: 20px;
+	margin-left: 10px;
+	padding: 10px;
 }
 
 span.glyphicon {
-    font-size: 30px;
-    color: #3087D0;
+    font-size: 20px;
+    color: white;
 }
 
 span.glyphicon:hover {
-    font-size: 30px;
+    font-size: 20px;
     color: #003F95;
 }
 
 span.glyphicon:active {
-    font-size: 30px;
+    font-size: 20px;
     color: #003F95;
 }
 
@@ -69,7 +88,22 @@ h3 {
 }
 
 #main_panel {
-	margin-left: 100px;
+	margin-top: 60px;
+	margin-left: 120px;
 	padding-right: 100px;
 }
 
+footer {
+   background-color: #62A0F1;
+   position:fixed;
+   left:0px;
+   bottom:0px;
+   height: 25px;
+   width:100%;
+   text-align: center;
+   color: white;
+}
+
+body, .navbar-fixed-top, .navbar-fixed-bottom {
+  margin-right: 0 !important;
+}

@@ -1,0 +1,8 @@
+<% if @event.errors.empty? %>
+  // add the row to the table, show alert and hide modal
+  $('#modal-event').modal('hide');
+  location.reload();
+<% else %>
+  // show first error
+  alert('<%= @product.errors.full_messages[0] %>');
+<% end %>

@@ -33,7 +33,7 @@
     </div><br/>
     <div class="row">
       <div class="col-xs-6">
-        <%= f.text_field :birthday, class:"form-control", 'data-behaviour' => 'datepicker', placeholder:"Fecha nacimiento" %>
+        <%= f.text_field :birthday, class:"form-control datepicker", 'data-behaviour' => 'datepicker', placeholder:"Fecha nacimiento" %>
       </div>
       <div class="col-xs-6">
         <%= f.country_select(:country, ["Spain"], {}, {class: "form-control"})%>
@@ -72,7 +72,7 @@
       }
   });
 
-  $('[data-behaviour~=datepicker]').datepicker({
+  $('.datepicker').datepicker({
     format: 'dd/mm/yyyy',
     startDate: '01/01/1920',
     language: 'es',

@@ -5,12 +5,11 @@
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
   <%= csrf_meta_tags %>
-  <script src="jquery.steps.js"></script>
 </head>
 <body>
 <div class="header">
-	<img id="logo" src= <%= asset_path("wayfix.png") %> >
-  <span style="float: right"><%= link_to "Cerrar sesión", destroy_user_session_path, method: :delete %></span>
+	<img id="logo" src= <%= asset_path("wayfix_3.png") %> >
+  <span style="float: right,"><%= link_to "Cerrar sesión", destroy_user_session_path, method: :delete %></span>
 </div>
 
   <div id="navbar">
@@ -21,7 +20,7 @@
         <% end %>
   	  </li>
   	  <li>
-        <%= link_to calendar_path do  %>
+        <%= link_to "/events/month" do  %>
         <span class="glyphicon glyphicon-calendar" aria-hidden="true"></span>
         <% end %>
   	  </li>
@@ -47,5 +46,8 @@
   <div id="main_panel">
   <%= yield %>
   </div>
+  <footer>
+    <p>Wayfix Inc.</p>
+  </footer>
 </body>
 </html>

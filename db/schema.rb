@@ -11,13 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160618175754) do
-
-  create_table "calendars", force: :cascade do |t|
-    t.datetime "start_date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
+ActiveRecord::Schema.define(version: 20160618172711) do
 
   create_table "centers", force: :cascade do |t|
     t.integer  "client_id"
@@ -65,12 +59,23 @@ ActiveRecord::Schema.define(version: 20160618175754) do
   end
 
   create_table "events", force: :cascade do |t|
-    t.string   "name"
-    t.string   "description"
-    t.datetime "start_time"
-    t.datetime "finish_time"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.integer  "user_id"
+    t.integer  "client_id"
+    t.integer  "patient_id"
+    t.string   "patient_name"
+    t.string   "patient_surname"
+    t.string   "observation"
+    t.string   "reason"
+    t.date     "date"
+    t.time     "hour_minute"
+    t.time     "start_time"
+    t.integer  "wait_time"
+    t.integer  "total_time"
+    t.time     "finish_time"
+    t.string   "doctor_name"
+    t.string   "doctor_surname"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   create_table "users", force: :cascade do |t|

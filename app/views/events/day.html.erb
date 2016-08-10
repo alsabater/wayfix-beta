@@ -1,0 +1,132 @@
+<ul class="list-inline">
+    <li><%= link_to " << ", date: @date.prev_month %></li>
+    <li><%= link_to " < ", date: @date.prev_day %></li>
+    <%= @date.strftime("%d %B %Y") %>
+    <li><%= link_to " > ", date: @date.next_day %></li>
+    <li><%= link_to " >> ", date: @date.next_month %></li>
+    <li style="float: right"><%= link_to "Ver Mes", events_month_path %></li>
+	<li style="float: right"><%= link_to "+ Nuevo Evento", new_event_path, remote: true, class: "btn btn-primary" %></li>
+</ul>
+
+</br>
+
+<table id="day_table" class="table table">
+	<tr>
+		<th></th>
+		<th>Hora</th>
+		<th>Nombre</th>
+		<th>Historia</th>
+		<th>Edad</th>
+		<th>Resp. Económica</th>
+		<th>Motivo</th>
+		<th>Doctor</th>
+		<th>Hora llegada</th>
+		<th>Hora entrada</th>
+		<th>Hora salida</th>
+
+	</tr>
+	<% @events.each do |event| %>
+		<tr>
+			<td bgcolor="blue"></td>
+			<td><%= event.hour_minute.strftime('%H:%M') %></td>
+			<td><%= event.patient_name + ' ' + event.patient_surname %></td>
+			<td><%= event.start_time %></td>
+			<td><%= event.start_time %></td>
+			<td><%= event.start_time %></td>
+			<td><%= event.reason %></td>
+			<td><%= @users.where(id: current_user.id).name %></td>
+			<td><button id="set_arrival_<%= event.id %>" class="btn btn-xs btn-info">Llegada</button></td>
+			<td><button id="set_entry_<%= event.id %>" class="btn btn-xs btn-success">Entrada</button></td>
+			<td><button id="set_exit_<%= event.id %>" class="btn btn-xs btn-danger">Salida</button></td>
+		</tr>
+	<% end %>
+</table>
+
+<script>
+
+  function setCookie(name, value) {
+    document.cookie=name + "=" + value;
+  }
+
+  function getCookie(name) {
+    var value = "; " + document.cookie;
+    var parts = value.split("; " + name + "=");
+    if (parts.length == 2) return parts.pop().split(";").shift();
+  }
+
+  function diff_time(time1, time2) {
+  	var diff = time2 - time1;
+  	var msec = diff;
+	var minutes = Math.floor(msec / 1000 / 60);
+	return minutes
+  }
+
+  function format_time(time) {
+  	if (time.getMinutes() < '10') {
+  		time = time.getHours() + ':0' + time.getMinutes(); 
+  	} else {
+  		time = time.getHours() + ':' + time.getMinutes();
+  	}
+  	return time
+  }
+
+  function update_event(id, time) {
+  	$.ajax({
+  		url: "/events/" + id,
+  		type: 'PUT',
+  		data: JSON.stringify({wait_time: time}),
+  		contentType: 'application/json',
+  		dataType: 'json'
+  	});
+  }
+
+  <% @events.map do |event| %>
+
+// Set the arrival hour with a cookie and then displays it
+
+  $('#set_arrival_<%= event.id %>').on('click', function(){
+	var arrival_time = new Date;
+	setCookie("arrival_time_<%= event.id %>", arrival_time);
+	setCookie("arrival_<%= event.id %>", format_time(arrival_time));
+	location.reload();
+  });
+
+  if (getCookie('arrival_<%= event.id %>') != undefined){
+  	$('#set_arrival_<%= event.id %>').replaceWith(getCookie('arrival_<%= event.id %>'));
+  }
+
+// Set the entry hour with a cookie and then displays it and also calculates the waiting_time
+
+  $('#set_entry_<%= event.id %>').on('click', function(){
+	var entry_time = new Date;
+	setCookie("entry_time_<%= event.id %>", entry_time)
+	var waiting_time = diff_time(Date.parse(getCookie('arrival_time_<%= event.id %>')), entry_time);
+	setCookie("entry_<%= event.id %>", format_time(entry_time));
+	update_event("<%= event.id %>", waiting_time);
+	location.reload();
+  });
+
+  if (getCookie('entry_<%= event.id %>') != undefined){
+  	$('#set_entry_<%= event.id %>').replaceWith(getCookie('entry_<%= event.id %>'));
+  }
+
+// Set the exit hour with a cookie and then displays it and also calculates the visit time
+
+  $('#set_exit_<%= event.id %>').on('click', function(){
+	var exit_time = new Date;
+	var visit_time = diff_time(Date.parse(getCookie('entry_time_<%= event.id %>')), exit_time);
+	setCookie("exit_time_<%= event.id %>", exit_time)
+	setCookie("exit_<%= event.id %>", format_time(exit_time));
+	location.reload();
+  });
+
+  if (getCookie('exit_<%= event.id %>') != undefined){
+  	$('#set_exit_<%= event.id %>').replaceWith(getCookie('exit_<%= event.id %>'));
+  }
+
+  <% end %>
+
+
+
+
+</script>

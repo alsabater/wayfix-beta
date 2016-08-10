@@ -6,9 +6,16 @@ Rails.application.routes.draw do
   resources :clients
   resources :centers
 
+  get '/events/month', to: 'events#month'
+  get '/events/day', to: 'events#day'
+  put '/events/:id', to: 'events#update'
+ 
+  resources :events
+
+
+
   delete '/centers_users', to: 'centers_users#destroy', as: :destroy_center_user
   
-  get '/calendar', to: 'events#index'
   get '/dashboard', to: 'dashboard#index'
   get '/settings', to: 'settings#index'
   # The priority is based upon order of creation: first created -> highest priority.

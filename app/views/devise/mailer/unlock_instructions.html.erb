@@ -1,7 +1,0 @@
-<p>Hola <%= @resource.email %>!</p>
-
-<p>Tu cuenta de Wayfix ha sido bloqueada debido a que has excedido el número permitido de inicios de sesión fallidos.</p>
-
-<p>Accede a link inferior para desbloquear tu cuenta:</p>
-
-<p><%= link_to 'Desbloquear mi cuenta', unlock_url(@resource, unlock_token: @token) %></p>

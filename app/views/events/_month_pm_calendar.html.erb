@@ -1,0 +1,4 @@
+<%= monthCalendar @date do |date| %>
+	<%= link_to date.day, events_day_path(date: date) %>
+	<input type="hidden" value="<%= @reason_a_new.where(date: date).size + @reason_a_surgery.where(date: date).size + @reason_a_review.where(date: date).size %>">
+<% end %>

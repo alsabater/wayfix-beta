@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
-  
+
+  devise_for :users
+  devise_for :admins
+
   root "home#index"
 
-  devise_for :users, controllers: { invitations: 'users/invitations', registrations: 'users/registrations' }
   resources :clients
   resources :centers
 
@@ -12,12 +14,14 @@ Rails.application.routes.draw do
  
   resources :events
 
-
-
   delete '/centers_users', to: 'centers_users#destroy', as: :destroy_center_user
   
   get '/dashboard', to: 'dashboard#index'
+
   get '/settings', to: 'settings#index'
+  get '/settings/invite_user', to: 'settings#invite_user'
+  post '/settings/create_user', to: 'settings#create_user'
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

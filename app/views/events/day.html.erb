@@ -4,43 +4,58 @@
     <%= @date.strftime("%d %B %Y") %>
     <li><%= link_to " > ", date: @date.next_day %></li>
     <li><%= link_to " >> ", date: @date.next_month %></li>
-    <li style="float: right"><%= link_to "Ver Mes", events_month_path %></li>
 	<li style="float: right"><%= link_to "+ Nuevo Evento", new_event_path, remote: true, class: "btn btn-primary" %></li>
+	<div style="margin: 0 auto; text-align: center" class="list-inline">
+		<li><%= link_to "Mes", events_month_path, class:"btn btn-sm btn-info" %></li>
+		<% if @date != Date.today %>
+			<li><%= link_to "Hoy", date: Date.today, class:"btn btn-sm btn-info" %></li>
+		<% end %>
+	</div>
 </ul>
 
 </br>
+<div>
+	<% if @events === [] %>
+		<div class="alert alert-info" role="alert"> No hay citas programadas para este día </div>
+	<% else %>
+	<div class="events_list" style="float: left">
+		<table id="day_table" class="table table">
+			<tr>
+				<th></th>
+				<th>Hora</th>
+				<th>Nombre</th>
+				<th>Historia</th>
+				<th>Edad</th>
+				<th>Resp. Económico</th>
+				<th>Motivo</th>
+				<th>Doctor</th>
+				<th>Hora llegada</th>
+				<th>Hora entrada</th>
+				<th>Hora salida</th>
 
-<table id="day_table" class="table table">
-	<tr>
-		<th></th>
-		<th>Hora</th>
-		<th>Nombre</th>
-		<th>Historia</th>
-		<th>Edad</th>
-		<th>Resp. Económica</th>
-		<th>Motivo</th>
-		<th>Doctor</th>
-		<th>Hora llegada</th>
-		<th>Hora entrada</th>
-		<th>Hora salida</th>
-
-	</tr>
-	<% @events.each do |event| %>
-		<tr>
-			<td bgcolor="blue"></td>
-			<td><%= event.hour_minute.strftime('%H:%M') %></td>
-			<td><%= event.patient_name + ' ' + event.patient_surname %></td>
-			<td><%= event.start_time %></td>
-			<td><%= event.start_time %></td>
-			<td><%= event.start_time %></td>
-			<td><%= event.reason %></td>
-			<td><%= @users.where(id: current_user.id).name %></td>
-			<td><button id="set_arrival_<%= event.id %>" class="btn btn-xs btn-info">Llegada</button></td>
-			<td><button id="set_entry_<%= event.id %>" class="btn btn-xs btn-success">Entrada</button></td>
-			<td><button id="set_exit_<%= event.id %>" class="btn btn-xs btn-danger">Salida</button></td>
-		</tr>
+			</tr>
+			<% @events.each do |event| %>
+				<tr>
+					<td id="status" style="width: 25px" bgcolor="blue"></td>
+					<td style="width: 50px"><%= event.hour_minute.strftime('%H:%M') %></td>
+					<td style="width: 190px"><%= event.patient_name + ' ' + event.patient_surname %></td>
+					<td style="width: 60px"><%= event.start_time %></td>
+					<td style="width: 50px"><%= event.start_time %></td>
+					<td style="width: 130px"><%= event.start_time %></td>
+					<td style="width: 50px"><%= event.reason %></td>
+					<td style="width: 90px"><%= @users.where(id: current_user.id).name %></td>
+					<td style="width: 90px"><button id="set_arrival_<%= event.id %>" class="btn btn-xs btn-info">Llegada</button></td>
+					<td style="width: 90px"><button id="set_entry_<%= event.id %>" class="btn btn-xs btn-success" disabled="disabled">Entrada</button></td>
+					<td style="width: 90px"><button id="set_exit_<%= event.id %>" class="btn btn-xs btn-danger" disabled="disabled">Salida</button></td>
+				</tr>
+			<% end %>
+		</table>
 	<% end %>
-</table>
+	</div>
+	<div class="filter">
+	<p>Hola!</p>
+	</div>
+</div>
 
 <script>
 
@@ -70,7 +85,7 @@
   	return time
   }
 
-  function update_event(id, time) {
+  function update_wait_time(id, time) {
   	$.ajax({
   		url: "/events/" + id,
   		type: 'PUT',
@@ -80,53 +95,67 @@
   	});
   }
 
+  function update_visit_time(id, time) {
+  	$.ajax({
+  		url: "/events/" + id,
+  		type: 'PUT',
+  		data: JSON.stringify({visit_time: time}),
+  		contentType: 'application/json',
+  		dataType: 'json'
+  	});
+  }
+
   <% @events.map do |event| %>
 
 // Set the arrival hour with a cookie and then displays it
 
-  $('#set_arrival_<%= event.id %>').on('click', function(){
-	var arrival_time = new Date;
-	setCookie("arrival_time_<%= event.id %>", arrival_time);
-	setCookie("arrival_<%= event.id %>", format_time(arrival_time));
-	location.reload();
-  });
+	  if (<%= @date %> != <%= Date.today %>){
+	  	$('#set_arrival_<%= event.id %>').prop("disabled", true);
+	  }
 
-  if (getCookie('arrival_<%= event.id %>') != undefined){
-  	$('#set_arrival_<%= event.id %>').replaceWith(getCookie('arrival_<%= event.id %>'));
-  }
+	  $('#set_arrival_<%= event.id %>').on('click', function(){
+		var arrival_time = new Date;
+		setCookie("arrival_time_<%= event.id %>", arrival_time);
+		setCookie("arrival_<%= event.id %>", format_time(arrival_time));
+		location.reload();
+	  });
 
-// Set the entry hour with a cookie and then displays it and also calculates the waiting_time
+	  if (getCookie('arrival_<%= event.id %>') != undefined){
+	  	$('#set_arrival_<%= event.id %>').replaceWith(getCookie('arrival_<%= event.id %>'));
+	  	$('#set_entry_<%= event.id %>').prop("disabled", false)
+	  }
 
-  $('#set_entry_<%= event.id %>').on('click', function(){
-	var entry_time = new Date;
-	setCookie("entry_time_<%= event.id %>", entry_time)
-	var waiting_time = diff_time(Date.parse(getCookie('arrival_time_<%= event.id %>')), entry_time);
-	setCookie("entry_<%= event.id %>", format_time(entry_time));
-	update_event("<%= event.id %>", waiting_time);
-	location.reload();
-  });
+	// Set the entry hour with a cookie and then displays it and also calculates the waiting_time
 
-  if (getCookie('entry_<%= event.id %>') != undefined){
-  	$('#set_entry_<%= event.id %>').replaceWith(getCookie('entry_<%= event.id %>'));
-  }
+	  $('#set_entry_<%= event.id %>').on('click', function(){
+		var entry_time = new Date;
+		setCookie("entry_time_<%= event.id %>", entry_time);
+		var waiting_time = diff_time(Date.parse(getCookie('arrival_time_<%= event.id %>')), entry_time);
+		setCookie("entry_<%= event.id %>", format_time(entry_time));
+		update_wait_time("<%= event.id %>", waiting_time);
+		location.reload();
+	  });
 
-// Set the exit hour with a cookie and then displays it and also calculates the visit time
+	  if (getCookie('entry_<%= event.id %>') != undefined){
+	  	$('#set_entry_<%= event.id %>').replaceWith(getCookie('entry_<%= event.id %>'));
+	  	$('#set_exit_<%= event.id %>').prop("disabled", false)
+	  }
 
-  $('#set_exit_<%= event.id %>').on('click', function(){
-	var exit_time = new Date;
-	var visit_time = diff_time(Date.parse(getCookie('entry_time_<%= event.id %>')), exit_time);
-	setCookie("exit_time_<%= event.id %>", exit_time)
-	setCookie("exit_<%= event.id %>", format_time(exit_time));
-	location.reload();
-  });
+	// Set the exit hour with a cookie and then displays it and also calculates the visit time
 
-  if (getCookie('exit_<%= event.id %>') != undefined){
-  	$('#set_exit_<%= event.id %>').replaceWith(getCookie('exit_<%= event.id %>'));
-  }
+	  $('#set_exit_<%= event.id %>').on('click', function(){
+		var exit_time = new Date;
+		setCookie("exit_time_<%= event.id %>", exit_time);
+		var visit_time = diff_time(Date.parse(getCookie('entry_time_<%= event.id %>')), exit_time);
+		setCookie("exit_<%= event.id %>", format_time(exit_time));
+		update_visit_time("<%= event.id %>", visit_time);
+		location.reload();
+	  });
+
+	  if (getCookie('exit_<%= event.id %>') != undefined){
+	  	$('#set_exit_<%= event.id %>').replaceWith(getCookie('exit_<%= event.id %>'));
+	  }
 
   <% end %>
-
-
-
 
 </script>

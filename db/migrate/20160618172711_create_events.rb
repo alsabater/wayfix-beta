@@ -12,6 +12,7 @@ class CreateEvents < ActiveRecord::Migration
       t.time :hour_minute
       t.time :start_time
       t.integer :wait_time
+      t.integer :visit_time
       t.integer :total_time
       t.time :finish_time
       t.string :doctor_name

@@ -1,0 +1,16 @@
+<div class="log_in_form">
+<h2>Invitación</h2>
+
+<%= form_for @user, url: user_registration_path do |f| %>
+    <%= f.text_field :email, class:"form-control", placeholder:"Email" %></p>
+    <%= f.text_field :name, class:"form-control", placeholder:"Nombre" %></p>
+    <%= f.text_field :surname_1, class:"form-control", placeholder:"Primer apellido" %></p>
+    <%= f.select(:job_position, ['Tipo de usuario','Personal de administración y servicios','Personal Médico','Personal sanitario no médico'], {}, {:class => "form-control"}) %></p>
+    <h4 style="text-align: left">Clínicas a las que pertenece</h4>
+    <% @centers.each do |t| %>
+    	<%= f.label t.center_name %>
+    	<%= check_box_tag "centers[]", t.id %>
+    <% end %></p>
+    <p><%= f.submit "Invitar", class:"btn btn-success" %></p>
+<% end -%>
+</div>

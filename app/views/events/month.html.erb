@@ -4,14 +4,67 @@
   <%= @date.strftime("%B %Y") %>
   <li class="m"><%= link_to " > ", date: @date.next_month %></li>
   <li class="m"><%= link_to " >> ", date: @date.next_year %></li>
-  <li style="float: right"><%= link_to "Ver Día", events_day_path %></li>
   <li style="float: right"><%= link_to "+ Nuevo Evento", new_event_path, remote: true, class: "btn btn-primary" %></li>
+  <div style="margin: 0 auto; text-align: center" class="list-inline">
+    <li><%= link_to "Día", events_day_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
+    <div class="btn group">
+      <li id="am" class="btn btn-sm btn-warning active">AM</li>
+      <li id="pm" class="btn btn-sm btn-warning">PM</li>
+    </div>
+  </div>
 </ul>
 </br>
 <div id="events">
-  <div id="calendar">
-    <%= monthCalendar @date do |date| %>
-    <a href="/events/day?date=<%= date %>"><%= date.day %></a>
-    <% end %>
+  <div id="am_calendar" class="hidden">
+    <%= render "month_am_calendar" %>
+  </div>
+  <div id="pm_calendar" class="hidden">
+    <%= render "month_pm_calendar" %>
   </div>
 </div>
+
+<script>
+
+if($("#am").hasClass("active")){
+  $("#am_calendar").removeClass('hidden');
+}
+
+$("#am").on('click', function(){
+  $(this).addClass("active");
+  $("#pm").removeClass("active");
+  $("#am_calendar").removeClass('hidden');
+  $("#pm_calendar").addClass("hidden");
+})
+
+$("#pm").on('click', function(){
+  $(this).addClass("active");
+  $("#am").removeClass("active");
+  $("#am_calendar").addClass("hidden");
+  $("#pm_calendar").removeClass("hidden");
+})
+
+
+$('td').each(function() {
+    var val = parseInt($(this).find('input').val());
+      if (val >= 1 && val <= 2){
+        $(this).removeClass();
+        $(this).addClass('very_light');
+      }
+      else if (val > 2 && val <= 3){
+        $(this).removeClass();
+        $(this).addClass('light');
+      }
+      else if (val > 3 && val <= 4){
+        $(this).removeClass();
+        $(this).addClass('moderated');
+      }
+      else if (val > 4 && val <= 5){
+        $(this).removeClass();
+        $(this).addClass('heavy');
+      }
+      else if (val > 5) {
+        $(this).removeClass();
+        $(this).addClass('very_heavy');
+      }
+})
+</script>

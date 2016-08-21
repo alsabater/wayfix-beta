@@ -1,0 +1,81 @@
+<div class="log_in_form">
+  <h3>Registro de administrador</h3>
+  <br>
+
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html:{id:"wizard"}) do |f| %>
+    <%= devise_error_messages! %>
+  <h3>Cuenta</h3>
+  <section>
+    <div class="form-group">
+      <%= f.email_field :email, class:"form-control", autofocus: true, placeholder:"Email" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.password_field :password, class:"form-control", autocomplete: "off", placeholder:"Contraseña (8 caracteres mínimo)" %>
+    </div>
+
+    <div class="form-group">
+      <%= f.password_field :password_confirmation, class:"form-control", autocomplete: "off", placeholder:"Confirmar contraseña" %>
+    </div>
+  </section>
+  <h3>Personal</h3>
+  <section>
+    <div class="form-group">
+      <%= f.text_field :name, class:"form-control", placeholder:"Nombre" %>
+    </div>
+    <div class="row">
+      <div class="col-xs-6">
+      <%= f.text_field :surname_1, class:"form-control", placeholder:"Primer apellido" %>
+      </div>
+      <div class="col-xs-6">
+      <%= f.text_field :surname_2, class:"form-control", placeholder:"Segundo apellido" %>
+      </div>
+    </div><br/>
+    <div class="row">
+      <div class="col-xs-6">
+        <%= f.text_field :birthday, class:"form-control datepicker", 'data-behaviour' => 'datepicker', placeholder:"Fecha nacimiento" %>
+      </div>
+      <div class="col-xs-6">
+        <%= f.country_select(:country, ["Spain"], {}, {class: "form-control"})%>
+      </div>
+    </div><br/>
+    <div class="form-group">
+      <%= f.text_field :dni_passport, class:"form-control", placeholder:"DNI o Pasaporte" %>
+    </div>
+    <div class="form-group">
+      <%= f.text_field :phone_number_1, class:"form-control", placeholder:"Teléfono" %>
+    </div>
+    <div class="form-group">
+      <%= f.text_field :phone_number_2, class:"form-control", placeholder:"Teléfono alternativo" %>
+    </div>
+    <div class="form-group">
+      <%= f.select(:job_position, ['Tipo de usuario','Personal de administración y servicios','Personal Médico','Personal sanitario no médico'], {}, {:class => "form-control"}) %>
+    </div>
+  </section>
+    <h3>Plan</h3>
+  <section>
+  </section>
+  <% end %>
+  <%= link_to "Log in", new_admin_session_path %><br />
+</div>
+
+<script>
+  var form = $('#wizard');
+  form.steps({
+    headerTag: 'h3',
+    bodyTag: 'section',
+    transitionEffect: 'slideLeft',
+    autoFocus: true,
+    onFinished: function (event, currentIndex)
+      {
+        form.submit();
+      }
+  });
+
+  $('.datepicker').datepicker({
+    format: 'dd/mm/yyyy',
+    startDate: '01/01/1920',
+    language: 'es',
+    startView: 2
+  });
+</script>

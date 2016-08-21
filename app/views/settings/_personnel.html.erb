@@ -1,5 +1,5 @@
 </p>
-<%= link_to "Invitar a personal", new_user_invitation_path %></p>
+<%= link_to "Invitar a personal", settings_invite_user_path %></p>
 <% if @users.empty? %>
 	<p>Invita personal a alguna de las clínicas creadas</p>
 <% else %>	
@@ -11,7 +11,7 @@
 					<td><%= f.surname_1 %></td>
 					<td><%= f.email %></td>
 					<td><%= f.job_position %></td>
-					<td><%= link_to "Eliminar", user_registration_path(user_id: f.id), method: :delete, data: {confirm: "¿Estás seguro que quieres eliminar a " + f.name + " " + f.surname_1 + "?"} %>
+					<td><%= link_to "Eliminar", user_registration_path(user_id: f.id), method: :delete, data: {confirm: "¿Estás seguro que quieres eliminar a " + f.name.to_s + " " + f.surname_1.to_s + "?"} %>
 				</tr>
 			</tbody>
 		</table>

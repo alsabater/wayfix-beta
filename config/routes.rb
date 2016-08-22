@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  devise_for :users
+  devise_for :users, controllers: {registrations: "registrations"}
   devise_for :admins
 
   root "home#index"
@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   get '/settings', to: 'settings#index'
   get '/settings/invite_user', to: 'settings#invite_user'
   post '/settings/create_user', to: 'settings#create_user'
+  post '/settings/add_personnel_to_center', to: 'settings#add_personnel_to_center'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

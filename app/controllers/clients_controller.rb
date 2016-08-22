@@ -1,6 +1,5 @@
 class ClientsController < ApplicationController
-before_action :authenticate_user!
-before_action :must_be_admin
+before_action :authenticate_admin!
 layout "before_wayfix"
 
   def new
@@ -10,10 +9,10 @@ layout "before_wayfix"
 
   def create
     @client = Client.new(client_params)
-    @client.user_id = current_user.id
+    @client.user_id = current_admin.id
     if @client.save
-      current_user.client_id = @client.id
-      current_user.save
+      current_admin.client_id = @client.id
+      current_admin.save
       redirect_to new_center_path
     else
       flash.now[:alert] = "No se ha podido registrar la empresa. Póngase en contacto con Wayfix"

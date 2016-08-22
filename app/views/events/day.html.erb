@@ -43,7 +43,7 @@
 					<td style="width: 50px"><%= event.start_time %></td>
 					<td style="width: 130px"><%= event.start_time %></td>
 					<td style="width: 50px"><%= event.reason %></td>
-					<td style="width: 90px"><%= @users.where(id: current_user.id).name %></td>
+					<td style="width: 90px"><%= @users.where(id: @user.id).name %></td>
 					<td style="width: 90px"><button id="set_arrival_<%= event.id %>" class="btn btn-xs btn-info">Llegada</button></td>
 					<td style="width: 90px"><button id="set_entry_<%= event.id %>" class="btn btn-xs btn-success" disabled="disabled">Entrada</button></td>
 					<td style="width: 90px"><button id="set_exit_<%= event.id %>" class="btn btn-xs btn-danger" disabled="disabled">Salida</button></td>

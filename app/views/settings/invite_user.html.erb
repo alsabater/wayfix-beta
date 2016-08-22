@@ -3,6 +3,12 @@
 
 <%= form_for @user, url: user_registration_path do |f| %>
     <%= f.text_field :email, class:"form-control", placeholder:"Email" %></p>
+    <div class="form-group">
+      <%= f.password_field :password, class:"form-control", autocomplete: "off", placeholder:"Contraseña (8 caracteres mínimo)" %>
+    </div>
+    <div class="form-group">
+      <%= f.password_field :password_confirmation, class:"form-control", autocomplete: "off", placeholder:"Confirmar contraseña" %>
+    </div>
     <%= f.text_field :name, class:"form-control", placeholder:"Nombre" %></p>
     <%= f.text_field :surname_1, class:"form-control", placeholder:"Primer apellido" %></p>
     <%= f.select(:job_position, ['Tipo de usuario','Personal de administración y servicios','Personal Médico','Personal sanitario no médico'], {}, {:class => "form-control"}) %></p>

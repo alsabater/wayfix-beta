@@ -3,17 +3,17 @@
 <% if @users.empty? %>
 	<p>Invita personal a alguna de las clínicas creadas</p>
 <% else %>	
-	<% @users.each do |f| %>
-		<table class="table">
-			<tbody>
-				<tr>
-					<td><%= f.name %></td>
-					<td><%= f.surname_1 %></td>
-					<td><%= f.email %></td>
-					<td><%= f.job_position %></td>
-					<td><%= link_to "Eliminar", user_registration_path(user_id: f.id), method: :delete, data: {confirm: "¿Estás seguro que quieres eliminar a " + f.name.to_s + " " + f.surname_1.to_s + "?"} %>
-				</tr>
-			</tbody>
+	<table class="table table-striped">
+		<tbody>
+			<% @users.each do |f| %>
+			<tr>
+				<td><%= f.name %></td>
+				<td><%= f.surname_1 %></td>
+				<td><%= f.email %></td>
+				<td><%= f.job_position %></td>
+				<td><%= link_to "Eliminar", user_registration_path(user_id: f.id), method: :delete, data: {confirm: "¿Estás seguro que quieres eliminar a " + f.name.to_s + " " + f.surname_1.to_s + "?"} %>
+			</tr>
+			<% end %>
+		</tbody>
 		</table>
-	<% end %>
 <% end %>

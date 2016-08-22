@@ -1,17 +1,29 @@
 class EventsController < ApplicationController	
+	before_action :authenticate_user_or_admin!
+
+	def select_user	
+		if current_user == nil
+			user = current_admin
+		else
+			user = current_user
+		end
+		return user
+	end
+
 	def index
 		@date = params[:date] ? Date.parse(params[:date]) : Date.today
 	end
 
 	def day
+		@user = select_user
 		@date = params[:date] ? Date.parse(params[:date]) : Date.today
-		@events = Event.where(client_id: current_user.client_id, date: params[:date])
+		@events = Event.where(client_id: @user.client_id, date: params[:date])
 		@users = User.all
 	end
 
 	def month
 		@date = params[:date] ? Date.parse(params[:date]) : Date.today
-		@events = Event.where(client_id: current_user.client_id)
+		@events = Event.where(client_id: select_user.client_id)
 		@morning_events = @events.where(hour_minute: '2000-01-01 00:00'..'2000-01-01 14:30')
 		@afternoon_events = @events.where(hour_minute: '2000-01-01 14:30'..'2000-01-02 00:00')
 		@reason_m_new = @morning_events.where(reason: 'Nuevo')
@@ -28,8 +40,8 @@ class EventsController < ApplicationController
 
 	def create
 		@event = Event.new(event_params)
-		@event.user_id = current_user.id
-		@event.client_id = current_user.client_id
+		@event.user_id = select_user.id
+		@event.client_id = select_user.client_id
 		if @event.save
 			respond_to do |format|
 			    format.html { redirect_to events_path } #or wherever you want to redirect

@@ -1,4 +1,4 @@
-<% if current_user.is_admin? %>
+<% if admin_signed_in? %>
 	<h3>Panel de administración de <%= @client.clinic_name %></h3></p>
 <div id="settings_tabs">
   <ul class="nav nav-tabs" style="height: 42px">

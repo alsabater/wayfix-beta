@@ -4,6 +4,5 @@ class Admin < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
   		 :rememberable, :trackable, :validatable
 
-  has_many :clients
-  has_and_belongs_to_many :centers
+  has_one :client
 end

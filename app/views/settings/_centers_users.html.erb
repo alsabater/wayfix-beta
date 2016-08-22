@@ -1,9 +1,12 @@
 </p>
 <%= link_to "Crear clínica", new_center_path %>
-<% @center.each do |f| %>
+<% @centers.each do |f| %>
 	<h4>Clínica <%= f.center_name %></h4>
+	<button type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#modal-add_personnel" data-name= <%=f.center_name %> data-id= <%= f.id %> >
+	Añadir personal
+	</button></br></br>
 	<% if f.users[0] != nil %>
-		<table class="table">
+		<table class="table table-striped">
 			<tbody>
 				<% f.users.each do |user| %>
 				<tr>
@@ -11,7 +14,7 @@
 					<td><%= user.surname_1 %></td>
 					<td><%= user.email %></td>
 					<td><%= user.job_position %></td>
-					<td><%= link_to "Eliminar de " + f.center_name, destroy_center_user_path(user_id: user.id, center_id: f.id), method: :delete  %>
+					<td><%= link_to "Eliminar de " + f.center_name, destroy_center_user_path(user_id: user.id, center_id: f.id), method: :delete, data: {confirm: "¿Estás seguro que quieres eliminar de " + f.center_name + " a " + user.name.to_s + " " + user.surname_1.to_s + "?"} %>
 				</tr>
 				<% end %>
 			</tbody>
@@ -20,3 +23,42 @@
 		<p>Ahora puedes añadir personal a la Clínica <%=f.center_name %></p>
 	<% end %>
 <% end %>	  
+
+<div class="modal fade" id="modal-add_personnel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <form remote="true" action="/settings/add_personnel_to_center" method="POST">
+	      <div class="modal-body">
+	      <input type='hidden' name='center_id' id='center_id' value=''/>
+			<% @users.each do |t| %>
+			<%= check_box_tag "users[]", t.id %>
+			<%= t.name %>
+			<%= t.surname_1 %>
+			<br>
+			<% end %>
+	      </div>
+	      <div class="modal-footer">
+	        <input type="submit" class="btn btn-success" value="Añadir" >
+	      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+$('#modal-add_personnel').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget) // Button that triggered the modal
+  var center_name = button.data('name') // Extract info from data-* attributes
+  var center_id = button.data('id')
+  // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+  // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+  var modal = $(this)
+  modal.find('.modal-title').text("Añade personal a " + center_name)
+  modal.find('#center_id').val(center_id)
+})
+
+</script>

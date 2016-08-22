@@ -7,6 +7,8 @@ class ApplicationController < ActionController::Base
 
   layout :layout_by_resource
 
+  devise_group :user_or_admin, contains: %i(admin user)
+
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_in)        << [:name, :surname_1, :surname_2, :birthday, :country, :dni_passport, :phone_number_1, :phone_number_2, :job_position]
     devise_parameter_sanitizer.for(:sign_up)        << [:name, :surname_1, :surname_2, :birthday, :country, :dni_passport, :phone_number_1, :phone_number_2, :job_position]
@@ -20,11 +22,6 @@ class ApplicationController < ActionController::Base
       "before_wayfix"
     else
       "application"
-    end
-  end
-
-  def must_be_admin
-    if current_user.is_admin? == true
     end
   end
 

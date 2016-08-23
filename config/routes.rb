@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
 
   devise_for :users, controllers: {registrations: "registrations"}
+  scope "/admin" do
+    resources :users
+  end
+  
   devise_for :admins
 
   root "home#index"

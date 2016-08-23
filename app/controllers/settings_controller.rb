@@ -1,20 +1,12 @@
 class SettingsController < ApplicationController
-	before_action :authenticate_admin!, only: :invite_user
-  protect_from_forgery with: :null_session
-
-  def select_user	
-	if current_user == nil
-	  user = current_admin
-	else
-	  user = current_user
-	end
-	return user
-  end
+	before_action :authenticate_admin!, only: [:invite_user, :add_personnel_to_center]
+  protect_from_forgery with: :null_session, only: Proc.new { |c| c.request.format.json? }
 
   def index
-  	@client = Client.find(select_user.client_id)
+    @user = select_user
+  	@client = Client.find(@user.client_id)
   	@centers = Center.where(client_id: @client.id)
-  	@users = User.where(client_id: select_user.client_id)
+  	@users = User.where(client_id: @user.client_id)
   end
 
   def invite_user

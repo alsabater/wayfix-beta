@@ -1,7 +1,7 @@
 <div class="log_in_form">
 <h2>Invitación</h2>
 
-<%= form_for @user, url: user_registration_path do |f| %>
+<%= form_for @user, url: users_path, method:"POST" do |f| %>
     <%= f.text_field :email, class:"form-control", placeholder:"Email" %></p>
     <div class="form-group">
       <%= f.password_field :password, class:"form-control", autocomplete: "off", placeholder:"Contraseña (8 caracteres mínimo)" %>
@@ -18,5 +18,5 @@
     	<%= check_box_tag "centers[]", t.id %>
     <% end %></p>
     <p><%= f.submit "Invitar", class:"btn btn-success" %></p>
-<% end -%>
+<% end %>
 </div>

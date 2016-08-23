@@ -1,15 +1,6 @@
 class EventsController < ApplicationController	
 	before_action :authenticate_user_or_admin!
 
-	def select_user	
-		if current_user == nil
-			user = current_admin
-		else
-			user = current_user
-		end
-		return user
-	end
-
 	def index
 		@date = params[:date] ? Date.parse(params[:date]) : Date.today
 	end

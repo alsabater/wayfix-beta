@@ -11,7 +11,7 @@
 				<td><%= f.surname_1 %></td>
 				<td><%= f.email %></td>
 				<td><%= f.job_position %></td>
-				<td><%= link_to "Eliminar", user_registration_path(user_id: f.id), method: :delete, data: {confirm: "¿Estás seguro que quieres eliminar a " + f.name.to_s + " " + f.surname_1.to_s + "?"} %>
+				<td><%= link_to "Eliminar", user_path(f.id), method: :delete, data: {confirm: "¿Estás seguro que quieres eliminar a " + f.name.to_s + " " + f.surname_1.to_s + "?"} %>
 			</tr>
 			<% end %>
 		</tbody>

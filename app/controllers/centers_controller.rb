@@ -1,6 +1,7 @@
 class CentersController < ApplicationController
   before_action :authenticate_admin!
   layout "before_wayfix"
+  
   def new
   	flash.now[:success] = "Añade ahora una clínica perteneciente a la sociedad registrada. Más adelante podrás añadir personal a la clínica o crear más clínicas."
   	@center = Center.new

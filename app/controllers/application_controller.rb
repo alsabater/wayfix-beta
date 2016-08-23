@@ -15,6 +15,15 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.for(:account_update) << [:name, :surname_1, :surname_2, :birthday, :country, :dni_passport, :phone_number_1, :phone_number_2, :job_position]
   end 
 
+  def select_user 
+    if current_user == nil
+      user = current_admin
+    else
+      user = current_user
+    end
+    return user
+  end
+
   protected
 
   def layout_by_resource

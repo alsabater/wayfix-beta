@@ -59,7 +59,7 @@ class EventsController < ApplicationController
 		@user = select_user
 		@event = Event.new(event_params)
 		@patients = Patient.where(client_id: select_user.client_id)
-		@patient = @patients.find_by(["name is ? and surname is ?", params[:event][:patient_name], params[:event][:patient_surname]])
+		@patient = @patients.find_by(["name @@ ? and surname @@ ?", params[:event][:patient_name], params[:event][:patient_surname]])
 		if @patient == nil
 			@patient = Patient.new
 			@patient.client_id = @user.client_id

@@ -4,76 +4,208 @@
     <%= @date.strftime("%d %B %Y") %>
     <li><%= link_to " > ", date: @date.next_day %></li>
     <li><%= link_to " >> ", date: @date.next_month %></li>
-	<li style="float: right"><%= link_to "+ Nuevo Evento", new_event_path, remote: true, class: "btn btn-primary" %></li>
-	<div style="margin: 0 auto; text-align: center" class="list-inline">
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-event" style="float: right">
+	+ Añadir evento
+	</button>
+		<div style="margin: 0 auto; text-align: center" class="list-inline">
 		<li><%= link_to "Mes", events_month_path, class:"btn btn-sm btn-info" %></li>
 		<% if @date != Date.today %>
-			<li><%= link_to "Hoy", date: Date.today, class:"btn btn-sm btn-info" %></li>
+			<li><%= link_to "Hoy", date: Date.today %></li>
 		<% end %>
 	</div>
 </ul>
 
 </br>
-<div>
-	<% if @events === [] %>
-		<div class="alert alert-info" role="alert"> No hay citas programadas para este día </div>
-	<% else %>
-	<div class="events_list" style="float: left">
-		<table id="day_table" class="table table">
-			<tr>
-				<th></th>
-				<th>Hora</th>
-				<th>Nombre</th>
-				<th>Historia</th>
-				<th>Edad</th>
-				<th>Resp. Económico</th>
-				<th>Motivo</th>
-				<th>Doctor</th>
-				<th>Hora llegada</th>
-				<th>Hora entrada</th>
-				<th>Hora salida</th>
+<div id="events_table">
+</div>
 
-			</tr>
-			<% @events.each do |event| %>
-				<tr>
-					<td id="status" style="width: 25px" bgcolor="blue"></td>
-					<td style="width: 50px"><%= event.hour_minute.strftime('%H:%M') %></td>
-					<td style="width: 190px"><%= event.patient_name + ' ' + event.patient_surname %></td>
-					<td style="width: 60px"><%= event.start_time %></td>
-					<td style="width: 50px"><%= event.start_time %></td>
-					<td style="width: 130px"><%= event.start_time %></td>
-					<td style="width: 50px"><%= event.reason %></td>
-					<td style="width: 90px"><%= @users.where(id: @user.id).name %></td>
-					<td style="width: 90px"><button id="set_arrival_<%= event.id %>" class="btn btn-xs btn-info">Llegada</button></td>
-					<td style="width: 90px"><button id="set_entry_<%= event.id %>" class="btn btn-xs btn-success" disabled="disabled">Entrada</button></td>
-					<td style="width: 90px"><button id="set_exit_<%= event.id %>" class="btn btn-xs btn-danger" disabled="disabled">Salida</button></td>
-				</tr>
-			<% end %>
-		</table>
+<div class="filter">
+	<select class="form-control" id="center_selector" onchange="feed_table()">
+	<% @centers.each do |center| %>
+		<option><%= center.center_name %></option>
 	<% end %>
-	</div>
-	<div class="filter">
-	<p>Hola!</p>
+	</select><br>
+	<div id="checkbox-container" onchange="feed_table()">
+		<% @users.each do |doctor| %>
+			<div>
+				<input type="checkbox" id="<%= doctor.name %>" value="<%= doctor.name%>">
+				<label for="<%= doctor.name%>"><%= doctor.name %></label>
+			</div>
+	  	<% end %>
 	</div>
 </div>
 
+<%= render 'form_new_event' %>
+
 <script>
 
-  function setCookie(name, value) {
-    document.cookie=name + "=" + value;
-  }
+feed_table()
 
-  function getCookie(name) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length == 2) return parts.pop().split(";").shift();
-  }
+function remember_center() {
+	var center_selected = document.getElementById("center_selector")
+	if($.cookie("center_selected") !== null && $.cookie("center_selected") !== center_selected.value ){
+		var center = $.cookie("center_selected")
+		$("#center_selector").find('option:contains(' + center + ')').attr("selected", true)
+		$.cookie("center_selected", center_selected.value)
+	}else{
+		$.cookie("center_selected", center_selected.value)
+	}
+}
+
+function remember_doctors() {
+	var checkboxValues = JSON.parse(localStorage.getItem('checkboxValues')) || {},
+	<% @users.each do |doctor| %>
+		$checkboxes = $("#checkbox-container :checkbox");
+	<% end %>
+
+	$checkboxes.on("change", function(){
+		$checkboxes.each(function(){
+		checkboxValues[this.id] = this.checked;
+	});
+
+	localStorage.setItem("checkboxValues", JSON.stringify(checkboxValues));
+	});
+
+	// On page load
+	$.each(checkboxValues, function(key, value) {
+	$("#" + key).prop('checked', value);
+});
+}
+
+function feed_table() {
+	remember_center()
+	remember_doctors()
+	var center_selected = document.getElementById("center_selector")
+	var doctors_selected = new Array
+	<% @users.each do |doctor| %>
+		doctors_selected.splice(0,0,$('#doctor_selector_<%= doctor.name %>:checked').val())
+	<% end %>
+	var date_param = window.location.search.substring(6);
+	$.ajax({
+		url: "/events/day_filter",
+		method: "POST",
+		data: { "center_name": center_selected.value, "date": date_param, "doctors": JSON.parse(localStorage.getItem('checkboxValues')) },
+		dataType:'JSON',
+		success: function(json){
+			if(json.length === 0){
+				$('#events_table').html('<p class="alert">No hay ninguna cita programada</p>')
+			} else {
+			var r_i = new Array(), j = -1;
+			r_i[++j] = '<table class="table table-striped"><thead><tr><th>Hora</th><th>Nombre</th><th>Historia</th><th>Edad</th><th>Resp. Económico</th><th>Motivo</th><th>Doctor</th><th>Hora Llegada</th><th>Hora Entrada</th><th>Hora Salida</th></tr></thead>';
+			for (var key=0, size=json.length; key<size; key++){
+		     r_i[++j] ='<tr><td>';
+		     r_i[++j] = json[key].start_time;
+		     r_i[++j] = '</td><td>';
+		     r_i[++j] = json[key].patient_name + ' ' + json[key].patient_surname;
+		     r_i[++j] = '</td><td>';
+		     r_i[++j] = json[key].patient_history;
+		     r_i[++j] = '</td><td>';
+		     r_i[++j] = json[key].patient_age;
+		     r_i[++j] = '</td><td>';
+		     r_i[++j] = json[key].patient_insurance;
+		     r_i[++j] = '</td><td>';
+		     r_i[++j] = json[key].reason;
+		     r_i[++j] = '</td><td>';
+		     r_i[++j] = json[key].doctor_name;
+		     r_i[++j] = '</td><td>';
+		     if (json[key].arrival_time !== null){
+		     	r_i[++j] = '<a onclick=reset_arrival(' + json[key].id + ')>' + json[key].arrival_time + '</a>'
+		     } else {
+		     	r_i[++j] = '<button id="set_arrival_' + json[key].id + '" class="btn btn-xs btn-info" onclick="set_arrival_time(' + json[key].id + ')">Llegada</button>';		     	
+		     }
+		     r_i[++j] = '</td><td>';
+		     if (json[key].entry_time !== null){
+		     	r_i[++j] = '<a onclick=reset_entry(' + json[key].id + ')>' + json[key].entry_time + '</a>'
+		     } else {
+		     	if (is_arrival_button_clicked(json[key].id)){
+		     		r_i[++j] = '<button id="set_entry_' + json[key].id + '" class="btn btn-xs btn-success" onclick="set_entry_time(' + json[key].id + ')">Entrada</button>';		     		
+		     	} else {
+		     		r_i[++j] = '<button disabled id="set_entry_' + json[key].id + '" class="btn btn-xs btn-success" onclick="set_entry_time(' + json[key].id + ')">Entrada</button>';
+		     	}
+		     }
+		     r_i[++j] = '</td><td>';
+		     if (json[key].exit_time !== null){
+		     	r_i[++j] = '<a onclick=reset_exit(' + json[key].id + ')>' + json[key].exit_time + '</a>'
+		     } else {
+		     	if (is_entry_button_clicked(json[key].id)){
+		     		r_i[++j] = '<button id="set_exit_' + json[key].id + '" class="btn btn-xs btn-danger" onclick="set_exit_time(' + json[key].id + ')">Salida</button>';	
+		     	} else {
+		     		r_i[++j] = '<button disabled id="set_exit_' + json[key].id + '" class="btn btn-xs btn-danger" onclick="set_exit_time(' + json[key].id + ')">Salida</button>';	
+		     	}     	
+		     }
+		     r_i[++j] = '</td></tr>';
+		     '</table>'
+		 }
+		$('#events_table').html(r_i.join(''));
+		check_day();
+		}
+		},
+		error: function(){
+
+		}
+	});	
+}
 
   function diff_time(time1, time2) {
   	var diff = time2 - time1;
   	var msec = diff;
 	var minutes = Math.floor(msec / 1000 / 60);
 	return minutes
+  }
+
+  function expire_date() {
+  	var date = new Date();
+	var midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+	return midnight;
+  }
+
+  function reset_arrival(id) {
+    if (confirm('¿Estás seguro de resetear el tiempo?')){
+	  	$.ajax({
+	  		url: "/events/" + id,
+	  		type: 'PUT',
+	  		data: JSON.stringify({arrival_time: null}),
+	  		contentType: 'application/json',
+	  		dataType: 'json',
+	  	});
+	  	$.removeCookie("arrival_button_" + id);
+	  	$.removeCookie("arrival_time_" + id);
+	  	location.reload();
+    } else {
+    	return;
+    }
+  }
+
+    function reset_entry(id) {
+	  if (confirm('¿Estás seguro de resetear el tiempo?')){
+	  	$.ajax({
+	  		url: "/events/" + id,
+	  		type: 'PUT',
+	  		data: JSON.stringify({entry_time: null, wait_time: null}),
+	  		contentType: 'application/json',
+	  		dataType: 'json',
+	  	});
+	  	$.removeCookie("entry_button_" + id);
+	  	$.removeCookie("entry_time_" + id);
+	  	location.reload();
+	  } else {
+	  	return;
+	  }
+  	}
+
+    function reset_exit(id) {
+     if (confirm('¿Estás seguro de resetear el tiempo?')){
+	  	$.ajax({
+	  		url: "/events/" + id,
+	  		type: 'PUT',
+	  		data: JSON.stringify({exit_time: null, visit_time: null}),
+	  		contentType: 'application/json',
+	  		dataType: 'json',
+	  	});
+	  	location.reload();
+  	} else {
+  		return;
+  	}
   }
 
   function format_time(time) {
@@ -85,77 +217,67 @@
   	return time
   }
 
-  function update_wait_time(id, time) {
+  function set_arrival_time(id) {
+  	var time = format_time(new Date);
   	$.ajax({
   		url: "/events/" + id,
   		type: 'PUT',
-  		data: JSON.stringify({wait_time: time}),
+  		data: JSON.stringify({arrival_time: time}),
   		contentType: 'application/json',
-  		dataType: 'json'
+  		dataType: 'json',
   	});
+  	$.cookie("arrival_button_" + id, "clicked", {expires: expire_date()})
+  	$.cookie("arrival_time_" + id, new Date, {expires: expire_date()})
+  	location.reload();
   }
 
-  function update_visit_time(id, time) {
+  function is_arrival_button_clicked (id){
+  	var status = $.cookie("arrival_button_" + id);
+  	return (status === "clicked");
+  }
+
+  function set_entry_time(id) {
+  	var time = format_time(new Date);
+  	var arrival_time = $.cookie("arrival_time_" + id);
+  	var wait_time = diff_time(new Date(arrival_time), new Date);
   	$.ajax({
   		url: "/events/" + id,
   		type: 'PUT',
-  		data: JSON.stringify({visit_time: time}),
+  		data: JSON.stringify({entry_time: time, wait_time: wait_time}),
   		contentType: 'application/json',
-  		dataType: 'json'
+  		dataType: 'json',
   	});
+  	$.cookie("entry_button_" + id, "clicked", {expires: expire_date()})
+  	$.cookie("entry_time_" + id, new Date, {expires: expire_date()})
+  	location.reload();
   }
 
-  <% @events.map do |event| %>
+  function is_entry_button_clicked (id){
+  	var status = $.cookie("entry_button_" + id);
+  	return (status === "clicked");
+  }
 
-// Set the arrival hour with a cookie and then displays it
+  function set_exit_time(id) {
+  	var time = format_time(new Date);
+  	var entry_time = $.cookie("entry_time_" + id);
+  	var visit_time = diff_time(new Date(entry_time), new Date);
+  	$.ajax({
+  		url: "/events/" + id,
+  		type: 'PUT',
+  		data: JSON.stringify({exit_time: time, visit_time: visit_time}),
+  		contentType: 'application/json',
+  		dataType: 'json',
+  	});
+  	location.reload();
+  }
 
-	  if (<%= @date %> != <%= Date.today %>){
-	  	$('#set_arrival_<%= event.id %>').prop("disabled", true);
-	  }
-
-	  $('#set_arrival_<%= event.id %>').on('click', function(){
-		var arrival_time = new Date;
-		setCookie("arrival_time_<%= event.id %>", arrival_time);
-		setCookie("arrival_<%= event.id %>", format_time(arrival_time));
-		location.reload();
-	  });
-
-	  if (getCookie('arrival_<%= event.id %>') != undefined){
-	  	$('#set_arrival_<%= event.id %>').replaceWith(getCookie('arrival_<%= event.id %>'));
-	  	$('#set_entry_<%= event.id %>').prop("disabled", false)
-	  }
-
-	// Set the entry hour with a cookie and then displays it and also calculates the waiting_time
-
-	  $('#set_entry_<%= event.id %>').on('click', function(){
-		var entry_time = new Date;
-		setCookie("entry_time_<%= event.id %>", entry_time);
-		var waiting_time = diff_time(Date.parse(getCookie('arrival_time_<%= event.id %>')), entry_time);
-		setCookie("entry_<%= event.id %>", format_time(entry_time));
-		update_wait_time("<%= event.id %>", waiting_time);
-		location.reload();
-	  });
-
-	  if (getCookie('entry_<%= event.id %>') != undefined){
-	  	$('#set_entry_<%= event.id %>').replaceWith(getCookie('entry_<%= event.id %>'));
-	  	$('#set_exit_<%= event.id %>').prop("disabled", false)
-	  }
-
-	// Set the exit hour with a cookie and then displays it and also calculates the visit time
-
-	  $('#set_exit_<%= event.id %>').on('click', function(){
-		var exit_time = new Date;
-		setCookie("exit_time_<%= event.id %>", exit_time);
-		var visit_time = diff_time(Date.parse(getCookie('entry_time_<%= event.id %>')), exit_time);
-		setCookie("exit_<%= event.id %>", format_time(exit_time));
-		update_visit_time("<%= event.id %>", visit_time);
-		location.reload();
-	  });
-
-	  if (getCookie('exit_<%= event.id %>') != undefined){
-	  	$('#set_exit_<%= event.id %>').replaceWith(getCookie('exit_<%= event.id %>'));
-	  }
-
-  <% end %>
-
+   function check_day() {
+	   if (<%= @date %> != <%= Date.today %>){
+	   	$("#events_table").find('input, button').attr("disabled", true);
+	   }
+   }
 </script>
+
+
+
+

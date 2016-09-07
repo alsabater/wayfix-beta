@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160821194032) do
+ActiveRecord::Schema.define(version: 20160823170549) do
 
   create_table "admins", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(version: 20160821194032) do
 
   create_table "centers", force: :cascade do |t|
     t.integer  "client_id"
+    t.integer  "admin_id"
     t.string   "center_name"
     t.string   "address"
     t.string   "city"
@@ -89,23 +90,52 @@ ActiveRecord::Schema.define(version: 20160821194032) do
 
   create_table "events", force: :cascade do |t|
     t.integer  "user_id"
+    t.integer  "admin_id"
     t.integer  "client_id"
+    t.string   "center_name"
     t.integer  "patient_id"
     t.string   "patient_name"
     t.string   "patient_surname"
+    t.integer  "patient_age"
     t.string   "observation"
     t.string   "reason"
     t.date     "date"
     t.time     "hour_minute"
-    t.time     "start_time"
     t.integer  "wait_time"
     t.integer  "visit_time"
     t.integer  "total_time"
-    t.time     "finish_time"
+    t.string   "start_time"
+    t.string   "finish_time"
+    t.string   "arrival_time"
+    t.string   "entry_time"
+    t.string   "exit_time"
     t.string   "doctor_name"
     t.string   "doctor_surname"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.date     "patient_birthday"
+    t.string   "patient_phone_number_1"
+    t.string   "patient_email"
+    t.integer  "patient_history"
+    t.string   "patient_insurance"
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
+
+  create_table "patients", force: :cascade do |t|
+    t.integer  "client_id"
+    t.integer  "center_id"
+    t.integer  "user_id"
+    t.integer  "admin_id"
+    t.string   "name"
+    t.string   "surname"
+    t.string   "email"
+    t.string   "insurance"
+    t.integer  "history"
+    t.date     "birthday"
+    t.string   "phone_number_1"
+    t.string   "phone_number_2"
+    t.string   "genre"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "users", force: :cascade do |t|

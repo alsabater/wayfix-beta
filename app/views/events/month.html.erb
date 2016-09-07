@@ -4,7 +4,9 @@
   <%= @date.strftime("%B %Y") %>
   <li class="m"><%= link_to " > ", date: @date.next_month %></li>
   <li class="m"><%= link_to " >> ", date: @date.next_year %></li>
-  <li style="float: right"><%= link_to "+ Nuevo Evento", new_event_path, remote: true, class: "btn btn-primary" %></li>
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-event" style="float: right">
+  + Añadir evento
+  </button>
   <div style="margin: 0 auto; text-align: center" class="list-inline">
     <li><%= link_to "Día", events_day_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
     <div class="btn group">
@@ -22,6 +24,24 @@
     <%= render "month_pm_calendar" %>
   </div>
 </div>
+
+<div class="filter">
+  <select class="form-control" id="center_selector" onchange="feed_table()">
+  <% @centers.each do |center| %>
+    <option><%= center.center_name %></option>
+  <% end %>
+  </select><br>
+  <div id="checkbox-container" onchange="feed_table()">
+    <% @users.each do |doctor| %>
+      <div>
+        <input type="checkbox" id="<%= doctor.name %>" value="<%= doctor.name%>">
+        <label for="<%= doctor.name%>"><%= doctor.name %></label>
+      </div>
+      <% end %>
+  </div>
+</div>
+
+<%= render 'form_new_event' %>
 
 <script>
 
@@ -67,4 +87,60 @@ $('td').each(function() {
         $(this).addClass('very_heavy');
       }
 })
+
+feed_table();
+
+function remember_center() {
+  var center_selected = document.getElementById("center_selector")
+  if($.cookie("center_selected") !== null && $.cookie("center_selected") !== center_selected.value ){
+    var center = $.cookie("center_selected")
+    $("#center_selector").find('option:contains(' + center + ')').attr("selected", true)
+    $.cookie("center_selected", center_selected.value)
+  }else{
+    $.cookie("center_selected", center_selected.value)
+  }
+}
+
+function remember_doctors() {
+  var checkboxValues = JSON.parse(localStorage.getItem('checkboxValues')) || {},
+  <% @users.each do |doctor| %>
+    $checkboxes = $("#checkbox-container :checkbox");
+  <% end %>
+
+  $checkboxes.on("change", function(){
+    $checkboxes.each(function(){
+    checkboxValues[this.id] = this.checked;
+  });
+
+  localStorage.setItem("checkboxValues", JSON.stringify(checkboxValues));
+  });
+
+  // On page load
+  $.each(checkboxValues, function(key, value) {
+  $("#" + key).prop('checked', value);
+});
+}
+
+function feed_table() {
+  remember_center()
+  remember_doctors()
+  var center_selected = document.getElementById("center_selector")
+  var doctors_selected = new Array
+  <% @users.each do |doctor| %>
+    doctors_selected.splice(0,0,$('#doctor_selector_<%= doctor.name %>:checked').val())
+  <% end %>
+  var date_param = window.location.search.substring(6);
+  $.ajax({
+    url: "/events/month_filter",
+    method: "POST",
+    data: { "center_name": center_selected.value, "date": date_param, "doctors": JSON.parse(localStorage.getItem('checkboxValues')) },
+    dataType:'JSON',
+    success: function(json){
+      location.reload
+    },
+    error: function(){
+
+    }
+  })
+ } 
 </script>

@@ -3,14 +3,6 @@ module CalendarHelper
 		Calendar.new(self, date, block).table
 	end
 
-	def weekCalendar(date = Date.today, &block)
-		WeeklyCalendar.new(self, date, block).table
-	end
-
-	def dayCalendar(date = Date.today, &block)
-		
-	end
-
 	class Calendar < Struct.new(:view, :date, :callback)
 		HEADER = %w[Lunes Martes Miércoles Jueves Viernes Sábado Domingo]
 		START_DAY = :monday 

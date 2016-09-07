@@ -5,4 +5,6 @@ class Admin < ActiveRecord::Base
   		 :rememberable, :trackable, :validatable
 
   has_one :client
+  has_many :centers
+  has_many :events
 end

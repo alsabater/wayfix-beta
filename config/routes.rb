@@ -4,16 +4,19 @@ Rails.application.routes.draw do
   scope "/admin" do
     resources :users
   end
-  
+
   devise_for :admins
 
   root "home#index"
 
   resources :clients
   resources :centers
+  resources :patients
 
-  get '/events/month', to: 'events#month'
-  get '/events/day', to: 'events#day'
+  get '/events/month', to: 'events#month', as: :events_month
+  get '/events/day', to: 'events#day', as: :events_day
+  post 'events/day_filter', to: 'events#day_filter'
+  post 'events/month_filter', to: 'events#month_filter'
   put '/events/:id', to: 'events#update'
  
   resources :events

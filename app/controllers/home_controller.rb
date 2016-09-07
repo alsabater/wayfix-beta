@@ -3,7 +3,7 @@ class HomeController < ApplicationController
 
   def index
   	@user = select_user
-  	if admin_signed_in? == true && @user.client_id == nil
+  	if admin_signed_in? && @user.client_id == nil
       redirect_to new_client_path
     elsif @user.sign_in_count == 1
    	  redirect_to edit_user_path(@user.id)

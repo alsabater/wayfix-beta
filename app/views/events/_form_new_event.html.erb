@@ -1,36 +1,83 @@
 <div class="modal fade" id="modal-event" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog">
+  <div class="modal-dialog" style="width: 60%; height:50%;">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Nuevo evento</h4>
       </div>
-      <%= form_for @event, id:"form-event", remote: true do |f| %>
+      <%= form_for @event, id:"form-event", action: events_path, method:"POST" do |f| %>
       <div class="modal-body">
         <div class="form-group">
           <div class="row">
             <div class="col-xs-6">
-              <%= f.text_field :patient_name, class:"form-control", placeholder:"Nombre paciente" %>
+              <%= f.text_field :patient_name, class:"form-control", placeholder:"Nombre paciente", id:"select_origin" %>
+              <input type="hidden" id="link_origin_id" name="link[origin_id]">
             </div>
             <div class="col-xs-6">
-              <%= f.text_field :patient_surname, class:"form-control", placeholder:"Apellidos paciente" %>
+              <%= f.text_field :patient_surname, class:"form-control", placeholder:"Apellidos paciente", id:"patient_surname" %>
             </div>
           </div></br>
           <div class="row">
-            <div class="col-xs-4">
-              <%= f.date_field :date, class:"form-control", placeholder:"Fecha" %>
-            </div> <!-- col-xs-4 -->
             <div class="col-xs-3">
-              <%= f.time_field :hour_minute, class:"form-control" %> </br>
-            </div> <!-- col-xs-3 --> 
-          </div> <!-- row -->
+            <strong>Datos paciente</strong>
+            </div> <!-- col-xs-3 -->
+          </div> <!-- row --><br>
           <div class="row">
-            <div class="col-xs-9">
-              <%= f.text_area :observation, class:"form-control", placeholder:"Observaciones" %>
-            </div> <!-- col-xs-9 -->
+            <div class="col-xs-4">
+              <%= f.date_field :patient_birthday, class:"form-control", id:"birthday" %>
+            </div> <!-- col-xs-4 -->
+            <div class="col-xs-4">
+              <%= f.text_field :patient_insurance, class:"form-control", placeholder:"Resp. Económico", id:"insurance" %>
+            </div> <!-- col-xs-4 -->
+            <div class="col-xs-4">              
+              <%= f.text_field :patient_history, class:"form-control", placeholder:"Historia", id:"history", disabled: true %>
+            </div> <!-- col-xs-4 -->
+          </div> <!-- row --><br>
+          <div class="row">
+            <div class="col-xs-6">
+              <%= f.text_field :patient_phone_number_1, class:"form-control", placeholder:"Teléfono de contacto", id:"phone" %>
+            </div> <!-- col-xs-6 -->
+            <div class="col-xs-6">
+              <%= f.text_field :patient_email, class:"form-control", placeholder:"email", id:"email" %>
+            </div> <!-- col-xs-6 -->
+          </div> <!-- row --><br>  
+          <div class="row">
             <div class="col-xs-3">
+            <strong>Datos cita</strong>
+            </div> <!-- col-xs-3 -->
+          </div> <!-- row --><br>
+          <div class="row">
+            <div class="col-xs-3">
+              <%= f.label :Fecha %>
+              <%= f.date_field :date, value: Date.today, class:"form-control" %>
+            </div> <!-- col-xs-3 -->
+            <div class="col-xs-2">
+              <%= f.label :Inicio %>
+              <%= f.time_field :hour_minute, class:"form-control" %>
+            </div> <!-- col-xs-2 --> 
+            <div class="col-xs-2">
+              <%= f.label :Fin %>
+              <%= f.time_field :finish_time, class:"form-control" %>
+            </div> <!-- col-xs-2 --> 
+            <div class="col-xs-3">
+              <%= f.label :Motivo %>
               <%= f.select(:reason, ['Revisión','Cirugía','Urgencia', 'Nuevo'], {}, {:class => "form-control"}) %>
             </div> <!-- col-xs-3 -->
+          </div> <!-- row --><br>
+          <div class="row">
+            <div class="col-xs-3">  
+              <%= f.label :Responsable %>          
+              <%= f.select(:doctor_name, @users.map{|doctor| doctor.name}, {}, {:class => "form-control"}) %>
+            </div> <!-- col-xs-3 -->
+            <div class="col-xs-3"> 
+              <%= f.label :Centro %>           
+              <%= f.select(:center_name, @centers.map{|center| center.center_name}, {}, {:class => "form-control"}) %>
+            </div> <!-- col-xs-3 -->
+          </div> <!-- row --> <br>
+          <div class="row">
+            <div class="col-xs-12">
+              <%= f.text_area :observation, class:"form-control", placeholder:"Observaciones" %>
+            </div> <!-- col-xs-9 -->
           </div> <!-- row -->
         </div> <!-- form-group -->
       </div>
@@ -42,4 +89,44 @@
   </div>
 </div>
 
+<script>
+$(function() {
+ // Below is the name of the textfield that will be autocomplete    
+  $('#select_origin').autocomplete({
+
+ // This shows the min length of charcters that must be typed before the autocomplete looks for a match.
+    minLength: 2,
+ // This is the source of the auocomplete suggestions. In this case a list of names from the people controller, in JSON format.
+    source: '<%= new_event_path(:json) %>',
+  // This updates the textfield when you move the updown the suggestions list, with your keyboard. In our case it will reflect the same value that you see in the suggestions which is the person.given_name.
+    focus: function(event, ui) {
+      $('#select_origin').val(ui.item.name + " " + ui.item.surname);
+      return false;
+    },
+ // Once a value in the drop down list is selected, do the following:
+    select: function(event, ui) {
+ // place the person.given_name value into the textfield called 'select_origin'...
+      $('#select_origin').val(ui.item.name);
+      $('#patient_surname').val(ui.item.surname)
+      $('#birthday').val(ui.item.birthday)
+      $('#phone').val(ui.item.phone_number_1)
+      $('#email').val(ui.item.email)
+      $('#history').val("Historia: " + ui.item.history)
+      $('#insurance').val(ui.item.insurance)
+ // and place the person.id into the hidden textfield called 'link_origin_id'. 
+      $('#link_origin_id').val(ui.item.id);
+      return false;
+    }
+  })
+ // The below code is straight from the jQuery example. It formats what data is displayed in the dropdown box, and can be customized.
+  .data( "uiAutocomplete" )._renderItem = function( ul, item ) {
+    return $( "<li></li>" )
+    .data( "item.autocomplete", item )
+ // For now which just want to show the person.given_name in the list.
+    .append( "<a>" + item.name + " " + item.surname + "</a>" )
+    .appendTo( ul );
+  };
+});
+
+</script>
 

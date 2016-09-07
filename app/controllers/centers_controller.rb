@@ -10,6 +10,7 @@ class CentersController < ApplicationController
   def create
   	@center = Center.new(center_params)
     @center.client_id = current_admin.client_id
+    @center.admin_id = current_admin.id
     if @center.save
   	  redirect_to settings_path
   	else

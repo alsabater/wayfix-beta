@@ -7,7 +7,7 @@
   color: #CCC; 
 }
 #events .calendar .today { 
-
+  color: red;
 }
 
 #events .calendar td, th {
@@ -91,11 +91,14 @@
   float: right;
 }
 
-.events_list {
+#events_table {
+  margin: 0;
+  float: left;
   width: 1000px;
 }
 
 .filter {
+  margin: 0;
   float: right;
 }
 
@@ -105,6 +108,13 @@
 
 .alert {
   text-align: center;
-  width: 320px;
+  width: 250px;
   margin: auto;
+  background-color: #5FB0D3;
+  color: white;
+  border-radius: 5px;
+}
+
+.ui-autocomplete {
+  z-index: 2000;
 }

@@ -24,13 +24,13 @@ class EventsController < ApplicationController
 
 	def month_filter
 		@user = select_user
+		@date = params[:date] ? Date.parse(params[:date]) : Date.today
 		@events = Event.where(client_id: @user.client_id, center_name: params[:center_name], doctor_name: params[:doctors].select{|key, hash| hash == "true" }.keys).order('hour_minute')
 		@morning_events = @events.where(hour_minute: '2000-01-01 00:00'..'2000-01-01 14:30')
 		@afternoon_events = @events.where(hour_minute: '2000-01-01 14:30'..'2000-01-02 00:00')
 		respond_to do |format|
-			format.json { render json: { morning_events: @morning_events, 
-										 afternoon_events: @afternoon_events }}
-		end	
+			format.html { render partial: 'month_calendar' }
+		end
 	end
 
 	def month
@@ -39,15 +39,6 @@ class EventsController < ApplicationController
 		@users = User.where(["client_id = ? and job_position = ?", @user.client_id, "Personal Médico"]) + Admin.where(["client_id = ?", @user.client_id])
 		@event = Event.new
 		@date = params[:date] ? Date.parse(params[:date]) : Date.today
-		@events = Event.where(client_id: @user.client_id)
-		@morning_events = @events.where(hour_minute: '2000-01-01 00:00'..'2000-01-01 14:30')
-		@afternoon_events = @events.where(hour_minute: '2000-01-01 14:30'..'2000-01-02 00:00')
-		# @reason_m_new = @morning_events.where(reason: 'Nuevo')
-		# @reason_m_surgery = @morning_events.where(reason: 'Cirugía')
-		# @reason_m_review = @morning_events.where(reason: 'Revisión')
-		# @reason_a_new = @afternoon_events.where(reason: 'Nuevo')
-		# @reason_a_surgery = @afternoon_events.where(reason: 'Cirugía')
-		# @reason_a_review = @afternoon_events.where(reason: 'Revisión')
 	end
 
 	def new

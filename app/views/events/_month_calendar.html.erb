@@ -1,0 +1,18 @@
+<div id="am_calendar" class="hidden">
+    <%= monthCalendar @date do |date| %>
+		<%= link_to date.day, events_day_path(date: date) %>
+		<input type="hidden" value="<%= @morning_events.where(date: date).size %>">
+	<% end %>
+</div>
+
+<div id="pm_calendar" class="hidden">
+	<%= monthCalendar @date do |date| %>
+		<%= link_to date.day, events_day_path(date: date) %>
+		<input type="hidden" value="<%= @afternoon_events.where(date: date).size %>">
+	<% end %>
+</div>
+
+
+
+
+

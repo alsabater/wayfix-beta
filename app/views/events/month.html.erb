@@ -9,7 +9,7 @@
   </button>
   <div style="margin: 0 auto; text-align: center" class="list-inline">
     <li><%= link_to "Día", events_day_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
-    <div class="btn group">
+    <div class="btn group" id="am_or_pm">
       <li id="am" class="btn btn-sm btn-warning active">AM</li>
       <li id="pm" class="btn btn-sm btn-warning">PM</li>
     </div>
@@ -17,12 +17,7 @@
 </ul>
 </br>
 <div id="events">
-  <div id="am_calendar" class="hidden">
-    <%= render "month_am_calendar" %>
-  </div>
-  <div id="pm_calendar" class="hidden">
-    <%= render "month_pm_calendar" %>
-  </div>
+
 </div>
 
 <div class="filter">
@@ -45,59 +40,73 @@
 
 <script>
 
-if($("#am").hasClass("active")){
-  $("#am_calendar").removeClass('hidden');
+function check_am_pm(){
+  if(localStorage.getItem('am_or_pm') === 'am'){
+    $("#am_calendar").removeClass('hidden');
+    $("#am").addClass('active');
+    $("#pm").removeClass("active");
+  }
+
+  if(localStorage.getItem('am_or_pm') === 'pm'){
+    $("#pm_calendar").removeClass('hidden');
+    $("#pm").addClass('active');
+    $("#am").removeClass("active");
+  }
+
+  $("#am").on('click', function(){
+    localStorage.setItem('am_or_pm', 'am');
+    $(this).addClass("active");
+    $("#pm").removeClass("active");
+    $("#am_calendar").removeClass('hidden');
+    $("#pm_calendar").addClass("hidden");
+  })
+
+  $("#pm").on('click', function(){
+    localStorage.setItem('am_or_pm', 'pm');
+    $(this).addClass("active");
+    $("#am").removeClass("active");
+    $("#am_calendar").addClass("hidden");
+    $("#pm_calendar").removeClass("hidden");
+  }) 
 }
 
-$("#am").on('click', function(){
-  $(this).addClass("active");
-  $("#pm").removeClass("active");
-  $("#am_calendar").removeClass('hidden');
-  $("#pm_calendar").addClass("hidden");
-})
+function check_busy_day(){
+  $('td').each(function() {
+      var val = parseInt($(this).find('input').val());
+        if (val >= 1 && val <= 2){
+          $(this).removeClass();
+          $(this).addClass('very_light');
+        }
+        else if (val > 2 && val <= 3){
+          $(this).removeClass();
+          $(this).addClass('light');
+        }
+        else if (val > 3 && val <= 4){
+          $(this).removeClass();
+          $(this).addClass('moderated');
+        }
+        else if (val > 4 && val <= 5){
+          $(this).removeClass();
+          $(this).addClass('heavy');
+        }
+        else if (val > 5) {
+          $(this).removeClass();
+          $(this).addClass('very_heavy');
+        }
+  }) 
+}
 
-$("#pm").on('click', function(){
-  $(this).addClass("active");
-  $("#am").removeClass("active");
-  $("#am_calendar").addClass("hidden");
-  $("#pm_calendar").removeClass("hidden");
-})
-
-
-$('td').each(function() {
-    var val = parseInt($(this).find('input').val());
-      if (val >= 1 && val <= 2){
-        $(this).removeClass();
-        $(this).addClass('very_light');
-      }
-      else if (val > 2 && val <= 3){
-        $(this).removeClass();
-        $(this).addClass('light');
-      }
-      else if (val > 3 && val <= 4){
-        $(this).removeClass();
-        $(this).addClass('moderated');
-      }
-      else if (val > 4 && val <= 5){
-        $(this).removeClass();
-        $(this).addClass('heavy');
-      }
-      else if (val > 5) {
-        $(this).removeClass();
-        $(this).addClass('very_heavy');
-      }
-})
 
 feed_table();
 
 function remember_center() {
   var center_selected = document.getElementById("center_selector")
-  if($.cookie("center_selected") !== null && $.cookie("center_selected") !== center_selected.value ){
-    var center = $.cookie("center_selected")
+  if(localStorage.getItem('center_selected') !== null && localStorage.getItem('center_selected') !== center_selected.value ){
+    var center = localStorage.getItem("center_selected")
     $("#center_selector").find('option:contains(' + center + ')').attr("selected", true)
-    $.cookie("center_selected", center_selected.value)
+    localStorage.setItem("center_selected", center_selected.value)
   }else{
-    $.cookie("center_selected", center_selected.value)
+    localStorage.setItem("center_selected", center_selected.value)
   }
 }
 
@@ -134,9 +143,11 @@ function feed_table() {
     url: "/events/month_filter",
     method: "POST",
     data: { "center_name": center_selected.value, "date": date_param, "doctors": JSON.parse(localStorage.getItem('checkboxValues')) },
-    dataType:'JSON',
-    success: function(json){
-      location.reload
+    success: function(data){
+      console.log(data)
+      $('#events').html(data);
+      check_am_pm();
+      check_busy_day();
     },
     error: function(){
 

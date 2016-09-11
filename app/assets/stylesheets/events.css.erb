@@ -1,6 +1,14 @@
+#am_or_pm {
+  float: left;
+}
+
+.events_buttons {
+  margin-top: 6px;
+  text-align: center;
+}
+
 #events .calendar{
   border-collapse: collapse;
-  width: 100%;
 }
 
 #events .calendar .notmonth {
@@ -20,7 +28,7 @@
 #events .calendar th {
     color: #666;
     text-align: center;
-    width: 14.28%;
+    width: 145px;
 }
 
 #events .calendar td {
@@ -78,8 +86,6 @@
 #events {
     text-decoration: none;
     color: black;
-    float: left;
-    width: 85%;
 }
 
 #events ul {
@@ -98,18 +104,16 @@
 }
 
 .filter {
-  margin: 0;
   float: right;
-}
-
-#am_pm {
-  text-align: center;
+  margin-left: 1px;
+  width: 170px;
 }
 
 .alert {
   text-align: center;
   width: 250px;
   margin: auto;
+  margin-top: 10px;
   background-color: #5FB0D3;
   color: white;
   border-radius: 5px;
@@ -118,3 +122,35 @@
 .ui-autocomplete {
   z-index: 2000;
 }
+
+#day_agenda {
+  border: 1px solid #bbb;
+  text-align: center;
+  font-size: inherit;
+  font-weight: normal;
+  color: #646464;
+  max-height: 500px;
+}
+
+#day_agenda td {
+  padding: 0px;
+  margin: 0px;
+}
+
+#day_agenda td, tr {
+  display: table-cell;
+  vertical-align: inherit;
+}
+
+
+#day_agenda_hours tr {
+  padding: 0px;
+  margin: 0px;
+  border-right: 1px solid #bbb;
+  border-bottom: 1px solid #bbb;
+}
+
+#day_agenda_cells tr {
+  border-bottom: 1px solid #bbb;
+}
+

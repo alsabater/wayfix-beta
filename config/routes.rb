@@ -14,8 +14,10 @@ Rails.application.routes.draw do
   resources :patients
 
   get '/events/month', to: 'events#month', as: :events_month
+  get '/events/activity_panel', to: 'events#activity_panel', as: :events_activity_panel
   get '/events/day', to: 'events#day', as: :events_day
   post 'events/day_filter', to: 'events#day_filter'
+  post 'events/activity_panel_filter', to: 'events#activity_panel_filter'
   post 'events/month_filter', to: 'events#month_filter'
   put '/events/:id', to: 'events#update'
  

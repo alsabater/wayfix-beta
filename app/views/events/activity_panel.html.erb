@@ -1,0 +1,283 @@
+<ul class="list-inline">
+    <li><%= link_to " << ", date: @date.prev_month %></li>
+    <li><%= link_to " < ", date: @date.prev_day %></li>
+    <%= @date.strftime("%d %B %Y") %>
+    <li><%= link_to " > ", date: @date.next_day %></li>
+    <li><%= link_to " >> ", date: @date.next_month %></li>
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-event" style="float: right">
+	+ Añadir evento
+	</button>
+	<div class="list-inline events_buttons">
+		<li><%= link_to "Día", events_day_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
+		<li><%= link_to "Semana", events_month_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
+		<li><%= link_to "Mes", events_month_path(date: Date.today), class:"btn btn-sm btn-info" %></li>	
+		<% if @date != Date.today %>
+			<li><%= link_to "Hoy", date: Date.today %></li>
+		<% end %>
+	</div>
+</ul>
+<div class="filter">
+	<select class="form-control" id="center_selector" onchange="feed_table()">
+	<% @centers.each do |center| %>
+		<option><%= center.center_name %></option>
+	<% end %>
+	</select><br>
+	<div id="checkbox-container" onchange="feed_table()">
+		<% @users.each do |doctor| %>
+			<div>
+				<input type="checkbox" id="<%= doctor.name %>" value="<%= doctor.name%>">
+				<label for="<%= doctor.name%>"><%= doctor.name %></label>
+			</div>
+	  	<% end %>
+	</div>
+</div>
+
+<div id="events_table">
+</div>
+
+<%= render 'form_new_event' %>
+
+<script>
+
+feed_table()
+
+function remember_center() {
+  var center_selected = document.getElementById("center_selector")
+  if(localStorage.getItem('center_selected') !== null && localStorage.getItem('center_selected') !== center_selected.value ){
+    var center = localStorage.getItem("center_selected")
+    $("#center_selector").find('option:contains(' + center + ')').attr("selected", true)
+    localStorage.setItem("center_selected", center_selected.value)
+  }else{
+    localStorage.setItem("center_selected", center_selected.value)
+  }
+}
+
+function remember_doctors() {
+	var checkboxValues = JSON.parse(localStorage.getItem('checkboxValues')) || {},
+	<% @users.each do |doctor| %>
+		$checkboxes = $("#checkbox-container :checkbox");
+	<% end %>
+
+	$checkboxes.on("change", function(){
+		$checkboxes.each(function(){
+		checkboxValues[this.id] = this.checked;
+	});
+
+	localStorage.setItem("checkboxValues", JSON.stringify(checkboxValues));
+	});
+
+	// On page load
+	$.each(checkboxValues, function(key, value) {
+	$("#" + key).prop('checked', value);
+});
+}
+
+function feed_table() {
+	remember_center()
+	remember_doctors()
+	var center_selected = document.getElementById("center_selector")
+	var doctors_selected = new Array
+	<% @users.each do |doctor| %>
+		doctors_selected.splice(0,0,$('#doctor_selector_<%= doctor.name %>:checked').val())
+	<% end %>
+	var date_param = window.location.search.substring(6);
+	$.ajax({
+		url: "/events/activity_panel_filter",
+		method: "POST",
+		data: { "center_name": center_selected.value, "date": date_param, "doctors": JSON.parse(localStorage.getItem('checkboxValues')) },
+		dataType:'JSON',
+		success: function(json){
+			if(json.length === 0){
+				$('#events_table').html('<p class="alert">No hay ninguna cita programada</p>')
+			} else {
+			var r_i = new Array(), j = -1;
+			r_i[++j] = '<table class="table table-striped"><thead><tr><th>Hora</th><th>Nombre</th><th>Historia</th><th>Edad</th><th>Resp. Económico</th><th>Motivo</th><th>Doctor</th><th>Hora Llegada</th><th>Hora Entrada</th><th>Hora Salida</th></tr></thead>';
+			for (var key=0, size=json.length; key<size; key++){
+		     r_i[++j] ='<tr><td>';
+		     r_i[++j] = json[key].start_time;
+		     r_i[++j] = '</td><td>';
+		     r_i[++j] = json[key].patient_name + ' ' + json[key].patient_surname;
+		     r_i[++j] = '</td><td>';
+		     r_i[++j] = json[key].patient_history;
+		     r_i[++j] = '</td><td>';
+		     r_i[++j] = json[key].patient_age;
+		     r_i[++j] = '</td><td>';
+		     r_i[++j] = json[key].patient_insurance;
+		     r_i[++j] = '</td><td>';
+		     r_i[++j] = json[key].reason;
+		     r_i[++j] = '</td><td>';
+		     r_i[++j] = json[key].doctor_name;
+		     r_i[++j] = '</td><td>';
+		     if (json[key].arrival_time !== null){
+		     	r_i[++j] = '<a onclick=reset_arrival(' + json[key].id + ')>' + json[key].arrival_time + '</a>'
+		     } else {
+		     	r_i[++j] = '<button id="set_arrival_' + json[key].id + '" class="btn btn-xs btn-info" onclick="set_arrival_time(' + json[key].id + ')">Llegada</button>';		     	
+		     }
+		     r_i[++j] = '</td><td>';
+		     if (json[key].entry_time !== null){
+		     	r_i[++j] = '<a onclick=reset_entry(' + json[key].id + ')>' + json[key].entry_time + '</a>'
+		     } else {
+		     	if (is_arrival_button_clicked(json[key].id)){
+		     		r_i[++j] = '<button id="set_entry_' + json[key].id + '" class="btn btn-xs btn-success" onclick="set_entry_time(' + json[key].id + ')">Entrada</button>';		     		
+		     	} else {
+		     		r_i[++j] = '<button disabled id="set_entry_' + json[key].id + '" class="btn btn-xs btn-success" onclick="set_entry_time(' + json[key].id + ')">Entrada</button>';
+		     	}
+		     }
+		     r_i[++j] = '</td><td>';
+		     if (json[key].exit_time !== null){
+		     	r_i[++j] = '<a onclick=reset_exit(' + json[key].id + ')>' + json[key].exit_time + '</a>'
+		     } else {
+		     	if (is_entry_button_clicked(json[key].id)){
+		     		r_i[++j] = '<button id="set_exit_' + json[key].id + '" class="btn btn-xs btn-danger" onclick="set_exit_time(' + json[key].id + ')">Salida</button>';	
+		     	} else {
+		     		r_i[++j] = '<button disabled id="set_exit_' + json[key].id + '" class="btn btn-xs btn-danger" onclick="set_exit_time(' + json[key].id + ')">Salida</button>';	
+		     	}     	
+		     }
+		     r_i[++j] = '</td></tr>';
+		     '</table>'
+		 }
+		$('#events_table').html(r_i.join(''));
+		check_day();
+		}
+		},
+		error: function(){
+
+		}
+	});	
+}
+
+  function diff_time(time1, time2) {
+  	var diff = time2 - time1;
+  	var msec = diff;
+	var minutes = Math.floor(msec / 1000 / 60);
+	return minutes
+  }
+
+  function expire_date() {
+  	var date = new Date();
+	var midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+	return midnight;
+  }
+
+  function reset_arrival(id) {
+    if (confirm('¿Estás seguro de resetear el tiempo?')){
+	  	$.ajax({
+	  		url: "/events/" + id,
+	  		type: 'PUT',
+	  		data: JSON.stringify({arrival_time: null}),
+	  		contentType: 'application/json',
+	  		dataType: 'json',
+	  	});
+	  	$.removeCookie("arrival_button_" + id);
+	  	$.removeCookie("arrival_time_" + id);
+	  	location.reload();
+    } else {
+    	return;
+    }
+  }
+
+    function reset_entry(id) {
+	  if (confirm('¿Estás seguro de resetear el tiempo?')){
+	  	$.ajax({
+	  		url: "/events/" + id,
+	  		type: 'PUT',
+	  		data: JSON.stringify({entry_time: null, wait_time: null}),
+	  		contentType: 'application/json',
+	  		dataType: 'json',
+	  	});
+	  	$.removeCookie("entry_button_" + id);
+	  	$.removeCookie("entry_time_" + id);
+	  	location.reload();
+	  } else {
+	  	return;
+	  }
+  	}
+
+    function reset_exit(id) {
+     if (confirm('¿Estás seguro de resetear el tiempo?')){
+	  	$.ajax({
+	  		url: "/events/" + id,
+	  		type: 'PUT',
+	  		data: JSON.stringify({exit_time: null, visit_time: null}),
+	  		contentType: 'application/json',
+	  		dataType: 'json',
+	  	});
+	  	location.reload();
+  	} else {
+  		return;
+  	}
+  }
+
+  function format_time(time) {
+  	if (time.getMinutes() < '10') {
+  		time = time.getHours() + ':0' + time.getMinutes(); 
+  	} else {
+  		time = time.getHours() + ':' + time.getMinutes();
+  	}
+  	return time
+  }
+
+  function set_arrival_time(id) {
+  	var time = format_time(new Date);
+  	$.ajax({
+  		url: "/events/" + id,
+  		type: 'PUT',
+  		data: JSON.stringify({arrival_time: time}),
+  		contentType: 'application/json',
+  		dataType: 'json',
+  	});
+  	$.cookie("arrival_button_" + id, "clicked", {expires: expire_date()})
+  	$.cookie("arrival_time_" + id, new Date, {expires: expire_date()})
+  	location.reload();
+  }
+
+  function is_arrival_button_clicked (id){
+  	var status = $.cookie("arrival_button_" + id);
+  	return (status === "clicked");
+  }
+
+  function set_entry_time(id) {
+  	var time = format_time(new Date);
+  	var arrival_time = $.cookie("arrival_time_" + id);
+  	var wait_time = diff_time(new Date(arrival_time), new Date);
+  	$.ajax({
+  		url: "/events/" + id,
+  		type: 'PUT',
+  		data: JSON.stringify({entry_time: time, wait_time: wait_time}),
+  		contentType: 'application/json',
+  		dataType: 'json',
+  	});
+  	$.cookie("entry_button_" + id, "clicked", {expires: expire_date()})
+  	$.cookie("entry_time_" + id, new Date, {expires: expire_date()})
+  	location.reload();
+  }
+
+  function is_entry_button_clicked (id){
+  	var status = $.cookie("entry_button_" + id);
+  	return (status === "clicked");
+  }
+
+  function set_exit_time(id) {
+  	var time = format_time(new Date);
+  	var entry_time = $.cookie("entry_time_" + id);
+  	var visit_time = diff_time(new Date(entry_time), new Date);
+  	$.ajax({
+  		url: "/events/" + id,
+  		type: 'PUT',
+  		data: JSON.stringify({exit_time: time, visit_time: visit_time}),
+  		contentType: 'application/json',
+  		dataType: 'json',
+  	});
+  	location.reload();
+  }
+
+   function check_day() {
+	   if (<%= @date %> != <%= Date.today %>){
+	   	$("#events_table").find('input, button').attr("disabled", true);
+	   }
+   }
+</script>
+
+
+
+

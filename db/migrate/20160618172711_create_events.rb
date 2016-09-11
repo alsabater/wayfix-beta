@@ -16,8 +16,9 @@ class CreateEvents < ActiveRecord::Migration
       t.integer :wait_time
       t.integer :visit_time
       t.integer :total_time
-      t.string :start_time
-      t.string :finish_time
+      t.time :start_time
+      t.integer :duration
+      t.time :finish_time
       t.string :arrival_time
       t.string :entry_time
       t.string :exit_time

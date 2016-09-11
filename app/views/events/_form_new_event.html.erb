@@ -53,11 +53,11 @@
             </div> <!-- col-xs-3 -->
             <div class="col-xs-2">
               <%= f.label :Inicio %>
-              <%= f.time_field :hour_minute, class:"form-control" %>
+              <%= f.select(:start_time, @time_array.map{|time| time}, {}, {class:"form-control"}) %>
             </div> <!-- col-xs-2 --> 
             <div class="col-xs-2">
               <%= f.label :Fin %>
-              <%= f.time_field :finish_time, class:"form-control" %>
+              <%= f.select :finish_time, @time_array.map{|time| time}, {}, {class:"form-control"} %>
             </div> <!-- col-xs-2 --> 
             <div class="col-xs-3">
               <%= f.label :Motivo %>

@@ -1,0 +1,305 @@
+<ul class="list-inline">
+    <li><%= link_to " < ", date: @date.prev_day %></li>
+    <%= @date.strftime("%d %B %Y") %>
+    <li><%= link_to " > ", date: @date.next_day %></li>
+	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-event" style="float: right">
+	+ Añadir evento
+	</button>
+	<div class="list-inline events_buttons">
+		
+		<li><%= link_to "Semana", events_month_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
+		<li><%= link_to "Mes", events_month_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
+		<li><%= link_to "Panel de actividad", events_activity_panel_path(date: Date.today), class:"btn btn-sm btn-info" %></li>	
+		<% if @date != Date.today %>
+			<li><%= link_to "Hoy", date: Date.today %></li>
+		<% end %>
+	</div>
+</ul>
+<div class="filter">
+	<select class="form-control" id="center_selector" onchange="feed_table()">
+	<% @centers.each do |center| %>
+		<option><%= center.center_name %></option>
+	<% end %>
+	</select><br>
+	<div id="checkbox-container" onchange="feed_table()">
+		<% @users.each do |doctor| %>
+			<div>
+				<input type="checkbox" id="<%= doctor.name %>" value="<%= doctor.name%>">
+				<label for="<%= doctor.name%>"><%= doctor.name %></label>
+			</div>
+	  	<% end %>
+	</div>
+</div>
+
+<div>
+	<table id="day_agenda">
+		<tbody>
+			<tr style="border: 1px solid #bbb;">
+				<td style="width: 100px">Hora</td>
+				<td style="width: 920px"><%= @date.strftime("%A") %></td>
+			</tr>
+			<tr>
+				<td>
+					<table class="day_agenda_hours">
+						<tbody>
+							<tr><td>00:00 - 00:15</td></tr>
+							<tr><td>00:15 - 00:30</td></tr>
+							<tr><td>00:30 - 00:45</td></tr>
+							<tr><td>00:45 - 01:00</td></tr>
+							<tr><td>01:00 - 01:15</td></tr>
+							<tr><td>01:15 - 01:30</td></tr>
+							<tr><td>01:30 - 01:45</td></tr>
+							<tr><td>01:45 - 02:00</td></tr>
+							<tr><td>02:00 - 02:15</td></tr>
+							<tr><td>02:15 - 02:30</td></tr>
+							<tr><td>02:30 - 02:45</td></tr>
+							<tr><td>02:45 - 03:00</td></tr>
+							<tr><td>03:00 - 03:15</td></tr>
+							<tr><td>03:15 - 03:30</td></tr>
+							<tr><td>03:30 - 03:45</td></tr>
+							<tr><td>03:45 - 04:00</td></tr>
+							<tr><td>04:00 - 04:15</td></tr>
+							<tr><td>04:15 - 04:30</td></tr>
+							<tr><td>04:30 - 04:45</td></tr>
+							<tr><td>04:45 - 05:00</td></tr>
+							<tr><td>05:00 - 05:15</td></tr>
+							<tr><td>05:15 - 05:30</td></tr>
+							<tr><td>05:30 - 05:45</td></tr>
+							<tr><td>05:45 - 06:00</td></tr>
+							<tr><td>06:00 - 06:15</td></tr>
+							<tr><td>06:15 - 06:30</td></tr>
+							<tr><td>06:30 - 06:45</td></tr>
+							<tr><td>06:45 - 07:00</td></tr>
+							<tr><td>07:00 - 07:15</td></tr>
+							<tr><td>07:15 - 07:30</td></tr>
+							<tr><td>07:30 - 07:45</td></tr>
+							<tr><td>07:45 - 08:00</td></tr>
+							<tr><td>08:00 - 08:15</td></tr>
+							<tr><td>08:15 - 08:30</td></tr>
+							<tr><td>08:30 - 08:45</td></tr>
+							<tr><td>08:45 - 09:00</td></tr>
+							<tr><td>09:00 - 09:15</td></tr>
+							<tr><td>09:15 - 09:30</td></tr>
+							<tr><td>09:30 - 09:45</td></tr>
+							<tr><td>09:45 - 10:00</td></tr>
+							<tr><td>10:00 - 10:15</td></tr>
+							<tr><td>10:15 - 10:30</td></tr>
+							<tr><td>10:30 - 10:45</td></tr>
+							<tr><td>10:45 - 11:00</td></tr>
+							<tr><td>11:00 - 11:15</td></tr>
+							<tr><td>11:15 - 11:30</td></tr>
+							<tr><td>11:30 - 11:45</td></tr>
+							<tr><td>11:45 - 12:00</td></tr>
+							<tr><td>12:00 - 12:15</td></tr>
+							<tr><td>12:15 - 12:30</td></tr>
+							<tr><td>12:30 - 12:45</td></tr>
+							<tr><td>12:45 - 13:00</td></tr>
+							<tr><td>13:00 - 13:15</td></tr>
+							<tr><td>13:15 - 13:30</td></tr>
+							<tr><td>13:30 - 13:45</td></tr>
+							<tr><td>13:45 - 14:00</td></tr>
+							<tr><td>14:00 - 14:15</td></tr>
+							<tr><td>14:15 - 14:30</td></tr>
+							<tr><td>14:30 - 14:45</td></tr>
+							<tr><td>14:45 - 15:00</td></tr>
+							<tr><td>15:00 - 15:15</td></tr>
+							<tr><td>15:15 - 15:30</td></tr>
+							<tr><td>15:30 - 15:45</td></tr>
+							<tr><td>15:45 - 16:00</td></tr>
+							<tr><td>16:00 - 16:15</td></tr>
+							<tr><td>16:15 - 16:30</td></tr>
+							<tr><td>16:30 - 16:45</td></tr>
+							<tr><td>16:45 - 17:00</td></tr>
+							<tr><td>17:00 - 17:15</td></tr>
+							<tr><td>17:15 - 17:30</td></tr>
+							<tr><td>17:30 - 17:45</td></tr>
+							<tr><td>17:45 - 18:00</td></tr>
+							<tr><td>18:00 - 18:15</td></tr>
+							<tr><td>18:15 - 18:30</td></tr>
+							<tr><td>18:30 - 18:45</td></tr>
+							<tr><td>18:45 - 19:00</td></tr>
+							<tr><td>19:00 - 19:15</td></tr>
+							<tr><td>19:15 - 19:30</td></tr>
+							<tr><td>19:30 - 19:45</td></tr>
+							<tr><td>19:45 - 20:00</td></tr>
+							<tr><td>20:00 - 20:15</td></tr>
+							<tr><td>20:15 - 20:30</td></tr>
+							<tr><td>20:30 - 20:45</td></tr>
+							<tr><td>20:45 - 21:00</td></tr>
+							<tr><td>21:00 - 21:15</td></tr>
+							<tr><td>21:15 - 21:30</td></tr>
+							<tr><td>21:30 - 21:45</td></tr>
+							<tr><td>21:45 - 22:00</td></tr>
+							<tr><td>22:00 - 22:15</td></tr>
+							<tr><td>22:15 - 22:30</td></tr>
+							<tr><td>22:30 - 22:45</td></tr>
+							<tr><td>22:45 - 23:00</td></tr>
+							<tr><td>23:00 - 23:15</td></tr>
+							<tr><td>23:15 - 23:30</td></tr>
+							<tr><td>23:30 - 23:45</td></tr>
+							<tr><td>23:45 - 00:00</td></tr>
+						</tbody>
+					</table>
+				</td>
+				<td>
+					<table class="day_agenda_hours">
+						<tbody>
+							<tr><td>00:00 - 00:15</td></tr>
+							<tr><td>00:15 - 00:30</td></tr>
+							<tr><td>00:30 - 00:45</td></tr>
+							<tr><td>00:45 - 01:00</td></tr>
+							<tr><td>01:00 - 01:15</td></tr>
+							<tr><td>01:15 - 01:30</td></tr>
+							<tr><td>01:30 - 01:45</td></tr>
+							<tr><td>01:45 - 02:00</td></tr>
+							<tr><td>02:00 - 02:15</td></tr>
+							<tr><td>02:15 - 02:30</td></tr>
+							<tr><td>02:30 - 02:45</td></tr>
+							<tr><td>02:45 - 03:00</td></tr>
+							<tr><td>03:00 - 03:15</td></tr>
+							<tr><td>03:15 - 03:30</td></tr>
+							<tr><td>03:30 - 03:45</td></tr>
+							<tr><td>03:45 - 04:00</td></tr>
+							<tr><td>04:00 - 04:15</td></tr>
+							<tr><td>04:15 - 04:30</td></tr>
+							<tr><td>04:30 - 04:45</td></tr>
+							<tr><td>04:45 - 05:00</td></tr>
+							<tr><td>05:00 - 05:15</td></tr>
+							<tr><td>05:15 - 05:30</td></tr>
+							<tr><td>05:30 - 05:45</td></tr>
+							<tr><td>05:45 - 06:00</td></tr>
+							<tr><td>06:00 - 06:15</td></tr>
+							<tr><td>06:15 - 06:30</td></tr>
+							<tr><td>06:30 - 06:45</td></tr>
+							<tr><td>06:45 - 07:00</td></tr>
+							<tr><td>07:00 - 07:15</td></tr>
+							<tr><td>07:15 - 07:30</td></tr>
+							<tr><td>07:30 - 07:45</td></tr>
+							<tr><td>07:45 - 08:00</td></tr>
+							<tr><td>08:00 - 08:15</td></tr>
+							<tr><td>08:15 - 08:30</td></tr>
+							<tr><td>08:30 - 08:45</td></tr>
+							<tr><td>08:45 - 09:00</td></tr>
+							<tr><td>09:00 - 09:15</td></tr>
+							<tr><td>09:15 - 09:30</td></tr>
+							<tr><td>09:30 - 09:45</td></tr>
+							<tr><td>09:45 - 10:00</td></tr>
+							<tr><td>10:00 - 10:15</td></tr>
+							<tr><td>10:15 - 10:30</td></tr>
+							<tr><td>10:30 - 10:45</td></tr>
+							<tr><td>10:45 - 11:00</td></tr>
+							<tr><td>11:00 - 11:15</td></tr>
+							<tr><td>11:15 - 11:30</td></tr>
+							<tr><td>11:30 - 11:45</td></tr>
+							<tr><td>11:45 - 12:00</td></tr>
+							<tr><td>12:00 - 12:15</td></tr>
+							<tr><td>12:15 - 12:30</td></tr>
+							<tr><td>12:30 - 12:45</td></tr>
+							<tr><td>12:45 - 13:00</td></tr>
+							<tr><td>13:00 - 13:15</td></tr>
+							<tr><td>13:15 - 13:30</td></tr>
+							<tr><td>13:30 - 13:45</td></tr>
+							<tr><td>13:45 - 14:00</td></tr>
+							<tr><td>14:00 - 14:15</td></tr>
+							<tr><td>14:15 - 14:30</td></tr>
+							<tr><td>14:30 - 14:45</td></tr>
+							<tr><td>14:45 - 15:00</td></tr>
+							<tr><td>15:00 - 15:15</td></tr>
+							<tr><td>15:15 - 15:30</td></tr>
+							<tr><td>15:30 - 15:45</td></tr>
+							<tr><td>15:45 - 16:00</td></tr>
+							<tr><td>16:00 - 16:15</td></tr>
+							<tr><td>16:15 - 16:30</td></tr>
+							<tr><td>16:30 - 16:45</td></tr>
+							<tr><td>16:45 - 17:00</td></tr>
+							<tr><td>17:00 - 17:15</td></tr>
+							<tr><td>17:15 - 17:30</td></tr>
+							<tr><td>17:30 - 17:45</td></tr>
+							<tr><td>17:45 - 18:00</td></tr>
+							<tr><td>18:00 - 18:15</td></tr>
+							<tr><td>18:15 - 18:30</td></tr>
+							<tr><td>18:30 - 18:45</td></tr>
+							<tr><td>18:45 - 19:00</td></tr>
+							<tr><td>19:00 - 19:15</td></tr>
+							<tr><td>19:15 - 19:30</td></tr>
+							<tr><td>19:30 - 19:45</td></tr>
+							<tr><td>19:45 - 20:00</td></tr>
+							<tr><td>20:00 - 20:15</td></tr>
+							<tr><td>20:15 - 20:30</td></tr>
+							<tr><td>20:30 - 20:45</td></tr>
+							<tr><td>20:45 - 21:00</td></tr>
+							<tr><td>21:00 - 21:15</td></tr>
+							<tr><td>21:15 - 21:30</td></tr>
+							<tr><td>21:30 - 21:45</td></tr>
+							<tr><td>21:45 - 22:00</td></tr>
+							<tr><td>22:00 - 22:15</td></tr>
+							<tr><td>22:15 - 22:30</td></tr>
+							<tr><td>22:30 - 22:45</td></tr>
+							<tr><td>22:45 - 23:00</td></tr>
+							<tr><td>23:00 - 23:15</td></tr>
+							<tr><td>23:15 - 23:30</td></tr>
+							<tr><td>23:30 - 23:45</td></tr>
+							<tr><td>23:45 - 00:00</td></tr>			
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<script>
+
+feed_table()
+
+function remember_center() {
+  var center_selected = document.getElementById("center_selector")
+  if(localStorage.getItem('center_selected') !== null && localStorage.getItem('center_selected') !== center_selected.value ){
+    var center = localStorage.getItem("center_selected")
+    $("#center_selector").find('option:contains(' + center + ')').attr("selected", true)
+    localStorage.setItem("center_selected", center_selected.value)
+  }else{
+    localStorage.setItem("center_selected", center_selected.value)
+  }
+}
+
+function remember_doctors() {
+	var checkboxValues = JSON.parse(localStorage.getItem('checkboxValues')) || {},
+	<% @users.each do |doctor| %>
+		$checkboxes = $("#checkbox-container :checkbox");
+	<% end %>
+
+	$checkboxes.on("change", function(){
+		$checkboxes.each(function(){
+		checkboxValues[this.id] = this.checked;
+	});
+
+	localStorage.setItem("checkboxValues", JSON.stringify(checkboxValues));
+	});
+
+	// On page load
+	$.each(checkboxValues, function(key, value) {
+	$("#" + key).prop('checked', value);
+});
+}
+
+function feed_table(){
+	remember_center()
+	remember_doctors()
+	var center_selected = document.getElementById("center_selector")
+	var doctors_selected = new Array
+	<% @users.each do |doctor| %>
+		doctors_selected.splice(0,0,$('#doctor_selector_<%= doctor.name %>:checked').val())
+	<% end %>
+	var date_param = window.location.search.substring(6);
+	$.ajax({
+		url: "/events/day_filter",
+		method: "POST",
+		data: { "center_name": center_selected.value, "date": date_param, "doctors": JSON.parse(localStorage.getItem('checkboxValues')) },
+		dataType:'JSON',
+		success: function(json){
+
+		}
+	})
+}
+</script>

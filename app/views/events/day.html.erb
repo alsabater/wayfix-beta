@@ -1,24 +1,20 @@
 <ul class="list-inline">
-    <li><%= link_to " << ", date: @date.prev_month %></li>
     <li><%= link_to " < ", date: @date.prev_day %></li>
     <%= @date.strftime("%d %B %Y") %>
     <li><%= link_to " > ", date: @date.next_day %></li>
-    <li><%= link_to " >> ", date: @date.next_month %></li>
 	<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-event" style="float: right">
 	+ Añadir evento
 	</button>
-		<div style="margin: 0 auto; text-align: center" class="list-inline">
+	<div class="list-inline events_buttons">
+		
+		<li><%= link_to "Semana", events_month_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
 		<li><%= link_to "Mes", events_month_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
+		<li><%= link_to "Panel de actividad", events_activity_panel_path(date: Date.today), class:"btn btn-sm btn-info" %></li>	
 		<% if @date != Date.today %>
 			<li><%= link_to "Hoy", date: Date.today %></li>
 		<% end %>
 	</div>
 </ul>
-
-</br>
-<div id="events_table">
-</div>
-
 <div class="filter">
 	<select class="form-control" id="center_selector" onchange="feed_table()">
 	<% @centers.each do |center| %>
@@ -35,7 +31,225 @@
 	</div>
 </div>
 
+<div style="overflow-y: scroll; max-height: 560px">
+	<table id="day_agenda">
+		<tbody>
+			<tr style="border: 1px solid #bbb;">
+				<td style="width: 50px">Hora</td>
+				<td style="width: 920px"><%= @date.strftime("%A") %></td>
+			</tr>
+			<tr>
+				<td>
+					<table id="day_agenda_hours">
+						<tbody>
+							<tr><td>00:00</td></tr>
+							<tr><td>00:15</td></tr>
+							<tr><td>00:30</td></tr>
+							<tr><td>00:45</td></tr>
+							<tr><td>01:00</td></tr>
+							<tr><td>01:15</td></tr>
+							<tr><td>01:30</td></tr>
+							<tr><td>01:45</td></tr>
+							<tr><td>02:00</td></tr>
+							<tr><td>02:15</td></tr>
+							<tr><td>02:30</td></tr>
+							<tr><td>02:45</td></tr>
+							<tr><td>03:00</td></tr>
+							<tr><td>03:15</td></tr>
+							<tr><td>03:30</td></tr>
+							<tr><td>03:45</td></tr>
+							<tr><td>04:00</td></tr>
+							<tr><td>04:15</td></tr>
+							<tr><td>04:30</td></tr>
+							<tr><td>04:45</td></tr>
+							<tr><td>05:00</td></tr>
+							<tr><td>05:15</td></tr>
+							<tr><td>05:30</td></tr>
+							<tr><td>05:45</td></tr>
+							<tr><td>06:00</td></tr>
+							<tr><td>06:15</td></tr>
+							<tr><td>06:30</td></tr>
+							<tr><td>06:45</td></tr>
+							<tr><td>07:00</td></tr>
+							<tr><td>07:15</td></tr>
+							<tr><td>07:30</td></tr>
+							<tr><td>07:45</td></tr>
+							<tr><td>08:00</td></tr>
+							<tr><td>08:15</td></tr>
+							<tr><td>08:30</td></tr>
+							<tr><td>08:45</td></tr>
+							<tr><td>09:00</td></tr>
+							<tr><td>09:15</td></tr>
+							<tr><td>09:30</td></tr>
+							<tr><td>09:45</td></tr>
+							<tr><td>10:00</td></tr>
+							<tr><td>10:15</td></tr>
+							<tr><td>10:30</td></tr>
+							<tr><td>10:45</td></tr>
+							<tr><td>11:00</td></tr>
+							<tr><td>11:15</td></tr>
+							<tr><td>11:30</td></tr>
+							<tr><td>11:45</td></tr>
+							<tr><td>12:00</td></tr>
+							<tr><td>12:15</td></tr>
+							<tr><td>12:30</td></tr>
+							<tr><td>12:45</td></tr>
+							<tr><td>13:00</td></tr>
+							<tr><td>13:15</td></tr>
+							<tr><td>13:30</td></tr>
+							<tr><td>13:45</td></tr>
+							<tr><td>14:00</td></tr>
+							<tr><td>14:15</td></tr>
+							<tr><td>14:30</td></tr>
+							<tr><td>14:45</td></tr>
+							<tr><td>15:00</td></tr>
+							<tr><td>15:15</td></tr>
+							<tr><td>15:30</td></tr>
+							<tr><td>15:45</td></tr>
+							<tr><td>16:00</td></tr>
+							<tr><td>16:15</td></tr>
+							<tr><td>16:30</td></tr>
+							<tr><td>16:45</td></tr>
+							<tr><td>17:00</td></tr>
+							<tr><td>17:15</td></tr>
+							<tr><td>17:30</td></tr>
+							<tr><td>17:45</td></tr>
+							<tr><td>18:00</td></tr>
+							<tr><td>18:15</td></tr>
+							<tr><td>18:30</td></tr>
+							<tr><td>18:45</td></tr>
+							<tr><td>19:00</td></tr>
+							<tr><td>19:15</td></tr>
+							<tr><td>19:30</td></tr>
+							<tr><td>19:45</td></tr>
+							<tr><td>20:00</td></tr>
+							<tr><td>20:15</td></tr>
+							<tr><td>20:30</td></tr>
+							<tr><td>20:45</td></tr>
+							<tr><td>21:00</td></tr>
+							<tr><td>21:15</td></tr>
+							<tr><td>21:30</td></tr>
+							<tr><td>21:45</td></tr>
+							<tr><td>22:00</td></tr>
+							<tr><td>22:15</td></tr>
+							<tr><td>22:30</td></tr>
+							<tr><td>22:45</td></tr>
+							<tr><td>23:00</td></tr>
+							<tr><td>23:15</td></tr>
+							<tr><td>23:30</td></tr>
+							<tr><td>23:45</td></tr>
+						</tbody>
+					</table>
+				</td>
+				<td>
+					<table id="day_agenda_cells" style="width: 900px;">
+						<tbody>
+							<tr><td id="slot_1">00:00 - 00:15</td></tr>
+							<tr><td id="slot_2">00:15 - 00:30</td></tr>
+							<tr><td id="slot_3">00:30 - 00:45</td></tr>
+							<tr><td id="slot_4">00:45 - 01:00</td></tr>
+							<tr><td id="slot_5">01:00 - 01:15</td></tr>
+							<tr><td id="slot_6">01:15 - 01:30</td></tr>
+							<tr><td id="slot_7">01:30 - 01:45</td></tr>
+							<tr><td id="slot_8">01:45 - 02:00</td></tr>
+							<tr><td id="slot_9">02:00 - 02:15</td></tr>
+							<tr><td id="slot_10">02:15 - 02:30</td></tr>
+							<tr><td id="slot_11">02:30 - 02:45</td></tr>
+							<tr><td id="slot_12">02:45 - 03:00</td></tr>
+							<tr><td id="slot_13">03:00 - 03:15</td></tr>
+							<tr><td id="slot_14">03:15 - 03:30</td></tr>
+							<tr><td id="slot_15">03:30 - 03:45</td></tr>
+							<tr><td id="slot_16">03:45 - 04:00</td></tr>
+							<tr><td id="slot_17">04:00 - 04:15</td></tr>
+							<tr><td id="slot_18">04:15 - 04:30</td></tr>
+							<tr><td id="slot_19">04:30 - 04:45</td></tr>
+							<tr><td id="slot_20">04:45 - 05:00</td></tr>
+							<tr><td id="slot_21">05:00 - 05:15</td></tr>
+							<tr><td id="slot_22">05:15 - 05:30</td></tr>
+							<tr><td id="slot_23">05:30 - 05:45</td></tr>
+							<tr><td id="slot_24">05:45 - 06:00</td></tr>
+							<tr><td id="slot_25">06:00 - 06:15</td></tr>
+							<tr><td id="slot_26">06:15 - 06:30</td></tr>
+							<tr><td id="slot_27">06:30 - 06:45</td></tr>
+							<tr><td id="slot_28">06:45 - 07:00</td></tr>
+							<tr><td id="slot_29">07:00 - 07:15</td></tr>
+							<tr><td id="slot_30">07:15 - 07:30</td></tr>
+							<tr><td id="slot_31">07:30 - 07:45</td></tr>
+							<tr><td id="slot_32">07:45 - 08:00</td></tr>
+							<tr><td id="slot_33">08:00 - 08:15</td></tr>
+							<tr><td id="slot_34">08:15 - 08:30</td></tr>
+							<tr><td id="slot_35">08:30 - 08:45</td></tr>
+							<tr><td id="slot_36">08:45 - 09:00</td></tr>
+							<tr><td id="slot_37">09:00 - 09:15</td></tr>
+							<tr><td id="slot_38">09:15 - 09:30</td></tr>
+							<tr><td id="slot_39">09:30 - 09:45</td></tr>
+							<tr><td id="slot_40">09:45 - 10:00</td></tr>
+							<tr><td id="slot_41">10:00 - 10:15</td></tr>
+							<tr><td id="slot_42">10:15 - 10:30</td></tr>
+							<tr><td id="slot_43">10:30 - 10:45</td></tr>
+							<tr><td id="slot_44">10:45 - 11:00</td></tr>
+							<tr><td id="slot_45">11:00 - 11:15</td></tr>
+							<tr><td id="slot_46">11:15 - 11:30</td></tr>
+							<tr><td id="slot_47">11:30 - 11:45</td></tr>
+							<tr><td id="slot_48">11:45 - 12:00</td></tr>
+							<tr><td id="slot_49">12:00 - 12:15</td></tr>
+							<tr><td id="slot_50">12:15 - 12:30</td></tr>
+							<tr><td id="slot_51">12:30 - 12:45</td></tr>
+							<tr><td id="slot_52">12:45 - 13:00</td></tr>
+							<tr><td id="slot_53">13:00 - 13:15</td></tr>
+							<tr><td id="slot_54">13:15 - 13:30</td></tr>
+							<tr><td id="slot_55">13:30 - 13:45</td></tr>
+							<tr><td id="slot_56">13:45 - 14:00</td></tr>
+							<tr><td id="slot_57">14:00 - 14:15</td></tr>
+							<tr><td id="slot_58">14:15 - 14:30</td></tr>
+							<tr><td id="slot_59">14:30 - 14:45</td></tr>
+							<tr><td id="slot_60">14:45 - 15:00</td></tr>
+							<tr><td id="slot_61">15:00 - 15:15</td></tr>
+							<tr><td id="slot_62">15:15 - 15:30</td></tr>
+							<tr><td id="slot_63">15:30 - 15:45</td></tr>
+							<tr><td id="slot_64">15:45 - 16:00</td></tr>
+							<tr><td id="slot_65">16:00 - 16:15</td></tr>
+							<tr><td id="slot_66">16:15 - 16:30</td></tr>
+							<tr><td id="slot_67">16:30 - 16:45</td></tr>
+							<tr><td id="slot_68">16:45 - 17:00</td></tr>
+							<tr><td id="slot_69">17:00 - 17:15</td></tr>
+							<tr><td id="slot_70">17:15 - 17:30</td></tr>
+							<tr><td id="slot_71">17:30 - 17:45</td></tr>
+							<tr><td id="slot_72">17:45 - 18:00</td></tr>
+							<tr><td id="slot_73">18:00 - 18:15</td></tr>
+							<tr><td id="slot_74">18:15 - 18:30</td></tr>
+							<tr><td id="slot_75">18:30 - 18:45</td></tr>
+							<tr><td id="slot_76">18:45 - 19:00</td></tr>
+							<tr><td id="slot_77">19:00 - 19:15</td></tr>
+							<tr><td id="slot_78">19:15 - 19:30</td></tr>
+							<tr><td id="slot_79">19:30 - 19:45</td></tr>
+							<tr><td id="slot_80">19:45 - 20:00</td></tr>
+							<tr><td id="slot_81">20:00 - 20:15</td></tr>
+							<tr><td id="slot_82">20:15 - 20:30</td></tr>
+							<tr><td id="slot_83">20:30 - 20:45</td></tr>
+							<tr><td id="slot_84">20:45 - 21:00</td></tr>
+							<tr><td id="slot_85">21:00 - 21:15</td></tr>
+							<tr><td id="slot_86">21:15 - 21:30</td></tr>
+							<tr><td id="slot_87">21:30 - 21:45</td></tr>
+							<tr><td id="slot_88">21:45 - 22:00</td></tr>
+							<tr><td id="slot_89">22:00 - 22:15</td></tr>
+							<tr><td id="slot_90">22:15 - 22:30</td></tr>
+							<tr><td id="slot_91">22:30 - 22:45</td></tr>
+							<tr><td id="slot_92">22:45 - 23:00</td></tr>
+							<tr><td id="slot_93">23:00 - 23:15</td></tr>
+							<tr><td id="slot_94">23:15 - 23:30</td></tr>
+							<tr><td id="slot_95">23:30 - 23:45</td></tr>
+							<tr><td id="slot_96">23:45 - 00:00</td></tr>			
+						</tbody>
+					</table>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
 <%= render 'form_new_event' %>
+
 
 <script>
 
@@ -72,7 +286,7 @@ function remember_doctors() {
 });
 }
 
-function feed_table() {
+function feed_table(){
 	remember_center()
 	remember_doctors()
 	var center_selected = document.getElementById("center_selector")
@@ -87,197 +301,8 @@ function feed_table() {
 		data: { "center_name": center_selected.value, "date": date_param, "doctors": JSON.parse(localStorage.getItem('checkboxValues')) },
 		dataType:'JSON',
 		success: function(json){
-			if(json.length === 0){
-				$('#events_table').html('<p class="alert">No hay ninguna cita programada</p>')
-			} else {
-			var r_i = new Array(), j = -1;
-			r_i[++j] = '<table class="table table-striped"><thead><tr><th>Hora</th><th>Nombre</th><th>Historia</th><th>Edad</th><th>Resp. Económico</th><th>Motivo</th><th>Doctor</th><th>Hora Llegada</th><th>Hora Entrada</th><th>Hora Salida</th></tr></thead>';
-			for (var key=0, size=json.length; key<size; key++){
-		     r_i[++j] ='<tr><td>';
-		     r_i[++j] = json[key].start_time;
-		     r_i[++j] = '</td><td>';
-		     r_i[++j] = json[key].patient_name + ' ' + json[key].patient_surname;
-		     r_i[++j] = '</td><td>';
-		     r_i[++j] = json[key].patient_history;
-		     r_i[++j] = '</td><td>';
-		     r_i[++j] = json[key].patient_age;
-		     r_i[++j] = '</td><td>';
-		     r_i[++j] = json[key].patient_insurance;
-		     r_i[++j] = '</td><td>';
-		     r_i[++j] = json[key].reason;
-		     r_i[++j] = '</td><td>';
-		     r_i[++j] = json[key].doctor_name;
-		     r_i[++j] = '</td><td>';
-		     if (json[key].arrival_time !== null){
-		     	r_i[++j] = '<a onclick=reset_arrival(' + json[key].id + ')>' + json[key].arrival_time + '</a>'
-		     } else {
-		     	r_i[++j] = '<button id="set_arrival_' + json[key].id + '" class="btn btn-xs btn-info" onclick="set_arrival_time(' + json[key].id + ')">Llegada</button>';		     	
-		     }
-		     r_i[++j] = '</td><td>';
-		     if (json[key].entry_time !== null){
-		     	r_i[++j] = '<a onclick=reset_entry(' + json[key].id + ')>' + json[key].entry_time + '</a>'
-		     } else {
-		     	if (is_arrival_button_clicked(json[key].id)){
-		     		r_i[++j] = '<button id="set_entry_' + json[key].id + '" class="btn btn-xs btn-success" onclick="set_entry_time(' + json[key].id + ')">Entrada</button>';		     		
-		     	} else {
-		     		r_i[++j] = '<button disabled id="set_entry_' + json[key].id + '" class="btn btn-xs btn-success" onclick="set_entry_time(' + json[key].id + ')">Entrada</button>';
-		     	}
-		     }
-		     r_i[++j] = '</td><td>';
-		     if (json[key].exit_time !== null){
-		     	r_i[++j] = '<a onclick=reset_exit(' + json[key].id + ')>' + json[key].exit_time + '</a>'
-		     } else {
-		     	if (is_entry_button_clicked(json[key].id)){
-		     		r_i[++j] = '<button id="set_exit_' + json[key].id + '" class="btn btn-xs btn-danger" onclick="set_exit_time(' + json[key].id + ')">Salida</button>';	
-		     	} else {
-		     		r_i[++j] = '<button disabled id="set_exit_' + json[key].id + '" class="btn btn-xs btn-danger" onclick="set_exit_time(' + json[key].id + ')">Salida</button>';	
-		     	}     	
-		     }
-		     r_i[++j] = '</td></tr>';
-		     '</table>'
-		 }
-		$('#events_table').html(r_i.join(''));
-		check_day();
-		}
-		},
-		error: function(){
 
 		}
-	});	
+	})
 }
-
-  function diff_time(time1, time2) {
-  	var diff = time2 - time1;
-  	var msec = diff;
-	var minutes = Math.floor(msec / 1000 / 60);
-	return minutes
-  }
-
-  function expire_date() {
-  	var date = new Date();
-	var midnight = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
-	return midnight;
-  }
-
-  function reset_arrival(id) {
-    if (confirm('¿Estás seguro de resetear el tiempo?')){
-	  	$.ajax({
-	  		url: "/events/" + id,
-	  		type: 'PUT',
-	  		data: JSON.stringify({arrival_time: null}),
-	  		contentType: 'application/json',
-	  		dataType: 'json',
-	  	});
-	  	$.removeCookie("arrival_button_" + id);
-	  	$.removeCookie("arrival_time_" + id);
-	  	location.reload();
-    } else {
-    	return;
-    }
-  }
-
-    function reset_entry(id) {
-	  if (confirm('¿Estás seguro de resetear el tiempo?')){
-	  	$.ajax({
-	  		url: "/events/" + id,
-	  		type: 'PUT',
-	  		data: JSON.stringify({entry_time: null, wait_time: null}),
-	  		contentType: 'application/json',
-	  		dataType: 'json',
-	  	});
-	  	$.removeCookie("entry_button_" + id);
-	  	$.removeCookie("entry_time_" + id);
-	  	location.reload();
-	  } else {
-	  	return;
-	  }
-  	}
-
-    function reset_exit(id) {
-     if (confirm('¿Estás seguro de resetear el tiempo?')){
-	  	$.ajax({
-	  		url: "/events/" + id,
-	  		type: 'PUT',
-	  		data: JSON.stringify({exit_time: null, visit_time: null}),
-	  		contentType: 'application/json',
-	  		dataType: 'json',
-	  	});
-	  	location.reload();
-  	} else {
-  		return;
-  	}
-  }
-
-  function format_time(time) {
-  	if (time.getMinutes() < '10') {
-  		time = time.getHours() + ':0' + time.getMinutes(); 
-  	} else {
-  		time = time.getHours() + ':' + time.getMinutes();
-  	}
-  	return time
-  }
-
-  function set_arrival_time(id) {
-  	var time = format_time(new Date);
-  	$.ajax({
-  		url: "/events/" + id,
-  		type: 'PUT',
-  		data: JSON.stringify({arrival_time: time}),
-  		contentType: 'application/json',
-  		dataType: 'json',
-  	});
-  	$.cookie("arrival_button_" + id, "clicked", {expires: expire_date()})
-  	$.cookie("arrival_time_" + id, new Date, {expires: expire_date()})
-  	location.reload();
-  }
-
-  function is_arrival_button_clicked (id){
-  	var status = $.cookie("arrival_button_" + id);
-  	return (status === "clicked");
-  }
-
-  function set_entry_time(id) {
-  	var time = format_time(new Date);
-  	var arrival_time = $.cookie("arrival_time_" + id);
-  	var wait_time = diff_time(new Date(arrival_time), new Date);
-  	$.ajax({
-  		url: "/events/" + id,
-  		type: 'PUT',
-  		data: JSON.stringify({entry_time: time, wait_time: wait_time}),
-  		contentType: 'application/json',
-  		dataType: 'json',
-  	});
-  	$.cookie("entry_button_" + id, "clicked", {expires: expire_date()})
-  	$.cookie("entry_time_" + id, new Date, {expires: expire_date()})
-  	location.reload();
-  }
-
-  function is_entry_button_clicked (id){
-  	var status = $.cookie("entry_button_" + id);
-  	return (status === "clicked");
-  }
-
-  function set_exit_time(id) {
-  	var time = format_time(new Date);
-  	var entry_time = $.cookie("entry_time_" + id);
-  	var visit_time = diff_time(new Date(entry_time), new Date);
-  	$.ajax({
-  		url: "/events/" + id,
-  		type: 'PUT',
-  		data: JSON.stringify({exit_time: time, visit_time: visit_time}),
-  		contentType: 'application/json',
-  		dataType: 'json',
-  	});
-  	location.reload();
-  }
-
-   function check_day() {
-	   if (<%= @date %> != <%= Date.today %>){
-	   	$("#events_table").find('input, button').attr("disabled", true);
-	   }
-   }
 </script>
-
-
-
-

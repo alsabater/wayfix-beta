@@ -1,40 +1,39 @@
 <ul class="list-inline">
-  <li class="m"><%= link_to " << ", date: @date.prev_year %></li>
-  <li class="m"><%= link_to " < ", date: @date.prev_month %></li>
-  <%= @date.strftime("%B %Y") %>
-  <li class="m"><%= link_to " > ", date: @date.next_month %></li>
-  <li class="m"><%= link_to " >> ", date: @date.next_year %></li>
+    <li><%= link_to " << ", date: @date.prev_year %></li>
+    <li><%= link_to " < ", date: @date.prev_month %></li>
+    <%= @date.strftime("%B %Y") %>
+    <li><%= link_to " > ", date: @date.next_month %></li>
+    <li><%= link_to " >> ", date: @date.next_year %></li>
   <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-event" style="float: right">
   + Añadir evento
   </button>
-  <div style="margin: 0 auto; text-align: center" class="list-inline">
-    <li><%= link_to "Día", events_day_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
-    <div class="btn group" id="am_or_pm">
+  <div class="list-inline events_buttons">
+    <div class="btn-group" id="am_or_pm">
       <li id="am" class="btn btn-sm btn-warning active">AM</li>
       <li id="pm" class="btn btn-sm btn-warning">PM</li>
     </div>
+    <li><%= link_to "Día", events_day_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
+    <li><%= link_to "Semana", events_month_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
+    <li><%= link_to "Panel de actividad", events_activity_panel_path(date: Date.today), class:"btn btn-sm btn-info" %></li>
   </div>
 </ul>
-</br>
-<div id="events">
-
-</div>
-
-<div class="filter">
-  <select class="form-control" id="center_selector" onchange="feed_table()">
-  <% @centers.each do |center| %>
-    <option><%= center.center_name %></option>
-  <% end %>
-  </select><br>
-  <div id="checkbox-container" onchange="feed_table()">
-    <% @users.each do |doctor| %>
-      <div>
-        <input type="checkbox" id="<%= doctor.name %>" value="<%= doctor.name%>">
-        <label for="<%= doctor.name%>"><%= doctor.name %></label>
-      </div>
-      <% end %>
+  <div class="filter">
+    <select class="form-control" id="center_selector" onchange="feed_table()">
+    <% @centers.each do |center| %>
+      <option><%= center.center_name %></option>
+    <% end %>
+    </select><br>
+    <div id="checkbox-container" onchange="feed_table()">
+      <% @users.each do |doctor| %>
+        <div>
+          <input type="checkbox" id="<%= doctor.name %>" value="<%= doctor.name%>">
+          <label for="<%= doctor.name%>"><%= doctor.name %></label>
+        </div>
+        <% end %>
+    </div>
+    </div>
+  <div id="events" style="overflow-y: scroll; max-height: 560px">
   </div>
-</div>
 
 <%= render 'form_new_event' %>
 
@@ -144,7 +143,6 @@ function feed_table() {
     method: "POST",
     data: { "center_name": center_selected.value, "date": date_param, "doctors": JSON.parse(localStorage.getItem('checkboxValues')) },
     success: function(data){
-      console.log(data)
       $('#events').html(data);
       check_am_pm();
       check_busy_day();

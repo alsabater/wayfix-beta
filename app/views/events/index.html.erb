@@ -1,6 +1,6 @@
 <div id="events">
   
-  <h3 id="month">
+  <h3>
   <%= link_to " << ", date: @date.prev_year %>
   <%= link_to " < ", date: @date.prev_month %>
   <%= @date.strftime("%B %Y") %>
@@ -10,5 +10,17 @@
   <br>
   <%= calendar @date do |date| %>
     <%= date.day %>
+  <% end %>
+</div>
+
+<div id="today_events">
+  <h4>Today <%= Date.today.strftime("%d %B %Y") %> </h4>
+  <% @events.each do |event| %>
+    <ul>
+      <li>
+        <%= event.start_time.strftime("%H:%M") %>
+        <%= event.name %>
+      </li>
+    </ul>
   <% end %>
 </div>
